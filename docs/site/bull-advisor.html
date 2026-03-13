@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bull Skill Advisor &mdash; Darts Cricket Research</title>
+  <meta name="description" content="Enter your MPR and bull accuracy to get a personalized strategy recommendation backed by 18 billion simulated games.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <nav class="nav">
+    <div class="nav-inner">
+      <a href="index.html" class="nav-brand">Darts Cricket Research</a>
+      <button class="hamburger-btn nav-toggle" aria-label="Toggle navigation">
+        <span></span><span></span><span></span>
+      </button>
+      <div class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="strategies.html">Strategies</a>
+        <a href="results.html">Results</a>
+        <a href="phase-switch.html">Phase Switch</a>
+        <a href="bull-analysis.html">Bull Analysis</a>
+        <a href="ai-agent.html">AI Agent</a>
+        <a href="methodology.html">Methodology</a>
+        <a href="advisor.html">Advisor</a>
+        <a href="bull-advisor.html" class="active">Bull Advisor</a>
+      </div>
+    </div>
+  </nav>
+
+  <header class="hero">
+    <div class="container">
+      <h1 class="hero-title">Bull Skill: The Hidden Dimension</h1>
+      <p class="hero-subtitle">18 billion simulated games reveal that your bull multiplier changes which strategy you should play</p>
+    </div>
+  </header>
+
+  <main class="container">
+
+    <!-- Section 1: The Discovery -->
+    <section class="section">
+      <h2 class="section-title">The Hidden Variable</h2>
+      <p>Every darts player knows their MPR. But almost nobody thinks about <strong>how well they hit bull relative to regular numbers</strong>. Our research shows this is a critical oversight.</p>
+
+      <p>We simulated <strong>18 billion games</strong> across 12 asymmetric bull multiplier combinations, 121 skill pairings, and all 22 strategies. The results are unambiguous: your bull multiplier is not noise &mdash; it fundamentally changes which strategy you should play.</p>
+
+      <div class="callout">
+        <p><strong>The key finding:</strong> A +0.25 bull multiplier advantage creates an <strong>~8 percentage point spread</strong> between the favored and unfavored player, with the advantaged side gaining most of the edge. At equal MPR, a 1.00x bull player beats a 0.25x bull opponent <strong>~65% of the time</strong> &mdash; using completely different strategies. The effect scales with skill: ~6pp spread at low MPR, up to ~12pp at pro level.</p>
+      </div>
+
+      <p class="text-small text-muted">The <strong>bull multiplier</strong> scales your normal hit probabilities when aiming at bull. A 0.75x multiplier means if you hit triples 30% on regular numbers, your equivalent accuracy on bull drops to ~22.5%. A 1.00x multiplier means bull is no harder than numbers for you.</p>
+    </section>
+
+    <!-- Section 2: Key Findings -->
+    <section class="section">
+      <h2 class="section-title">What the Data Shows</h2>
+
+      <div class="findings-grid">
+        <div class="card">
+          <h4 class="card-title">Strategy Depends on Bull</h4>
+          <p class="card-body">The optimal strategy <strong>significantly changes</strong> based on bull accuracy (chi-squared = 246.3, p < 0.0001). Bad at bull? Defer it &mdash; play <strong>S9</strong> (high threshold) or <strong>E2</strong> (honeypot). Good at bull? Exploit it with <strong>E1</strong> (early bull closure). This isn't a minor adjustment &mdash; it's a completely different approach.</p>
+        </div>
+
+        <div class="card">
+          <h4 class="card-title">Bull Matters More at High Skill</h4>
+          <p class="card-body">At low MPR, bull accuracy barely matters &mdash; misses dominate everything. From MPR 2.0 upward, a +0.25 bull advantage creates a <strong>~7&ndash;8pp spread</strong> between players. At pro level (5.6), that spread grows to <strong>~11pp</strong>. Better players reach the bull-closure phase faster, making accuracy there decisive.</p>
+        </div>
+
+        <div class="card">
+          <h4 class="card-title">Bull = Hidden MPR</h4>
+          <p class="card-body">Each +0.25 bull multiplier step compensates for <strong>~0.13 MPR</strong> on average. But this scales with skill: at 4.0 MPR, a 0.75 multiplier gap is worth <strong>0.40 MPR</strong> &mdash; the difference between a good league player and a semi-pro.</p>
+        </div>
+
+        <div class="card">
+          <h4 class="card-title">Every Comparison is Significant</h4>
+          <p class="card-body">With 20,000 games per matchup, <strong>every single one</strong> of the 2,904 pairwise comparisons shows a statistically significant bull effect (all p < 0.0001). 95% confidence intervals are &plusmn;0.7%.</p>
+        </div>
+      </div>
+
+      <!-- Strategy Regime Table -->
+      <h3>Strategy Regimes by Bull Multiplier</h3>
+      <p class="text-small text-muted">Equal-skill matchups with symmetric bull accuracy. At each bull level, the table shows which strategy is #1 most often across 11 MPR levels.</p>
+      <table class="methodology-table">
+        <thead>
+          <tr>
+            <th>Bull Multiplier</th>
+            <th>Best Strategy</th>
+            <th>Why It Works</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>0.25x</strong> (bull is 4x harder)</td>
+            <td class="text-accent"><strong>S9</strong> Max Threshold (7/11), <strong>E2</strong> Honeypot (4/11)</td>
+            <td>High scoring threshold defers bull closure longest; at low MPR, E2's honeypot avoids bull-dependent decisions</td>
+          </tr>
+          <tr>
+            <td><strong>0.50x</strong> (bull is 2x harder)</td>
+            <td class="text-accent"><strong>E2</strong> Honeypot (6/11), <strong>PS</strong> Phase Switch (4/11), <strong>S2</strong> Score Then Cover (1/11)</td>
+            <td>E2's trap-and-score approach is bull-insensitive; PS's aggressive scoring works at higher skill</td>
+          </tr>
+          <tr>
+            <td><strong>0.75x</strong> (realistic default)</td>
+            <td class="text-accent"><strong>E2</strong> Honeypot (7/11), <strong>PS</strong> Phase Switch (3/11), <strong>S2</strong> Score Then Cover (1/11)</td>
+            <td>E2 dominates at low-to-mid MPR; PS takes over at high MPR where accuracy enables the two-phase approach</td>
+          </tr>
+          <tr>
+            <td><strong>1.00x</strong> (bull = numbers)</td>
+            <td class="text-accent"><strong>E1</strong> Early Bull (9/11), <strong>PS</strong> Phase Switch (2/11)</td>
+            <td>Early bull closure becomes an offensive weapon when bull is no harder than numbers</td>
+          </tr>
+        </tbody>
+      </table>
+      <p class="text-small text-muted">When you and your opponent have <em>different</em> bull accuracy, recommendations shift further. The interactive tool below accounts for asymmetric matchups.</p>
+    </section>
+
+    <!-- Section 3: Interactive Strategy Guide -->
+    <section class="section" id="guide-section">
+      <h2 class="section-title">Your Personalized Strategy Guide</h2>
+      <p>Enter your stats and your opponent's to get a data-backed strategy recommendation.</p>
+
+      <div class="bull-advisor-inputs">
+        <!-- Your Profile -->
+        <div class="bull-advisor-player">
+          <h3>You</h3>
+          <div class="bull-advisor-field">
+            <label>Your MPR</label>
+            <div class="toggle-group bull-mpr-toggle" data-player="0">
+              <button class="toggle-btn" data-mpr="5.6">5.6</button>
+              <button class="toggle-btn" data-mpr="4.9">4.9</button>
+              <button class="toggle-btn" data-mpr="4.0">4.0</button>
+              <button class="toggle-btn" data-mpr="3.6">3.6</button>
+              <button class="toggle-btn active" data-mpr="3.0">3.0</button>
+              <button class="toggle-btn" data-mpr="2.5">2.5</button>
+              <button class="toggle-btn" data-mpr="2.0">2.0</button>
+              <button class="toggle-btn" data-mpr="1.5">1.5</button>
+              <button class="toggle-btn" data-mpr="1.2">1.2</button>
+              <button class="toggle-btn" data-mpr="1.0">1.0</button>
+              <button class="toggle-btn" data-mpr="0.8">0.8</button>
+            </div>
+          </div>
+          <div class="bull-advisor-field">
+            <label>Your Bull Hit Rate</label>
+            <div class="advisor-bull-input-group">
+              <input type="number" id="bull-pct-0" class="advisor-bull-pct-input" value="" min="0" max="100" step="1" placeholder="e.g. 50">
+              <span class="advisor-bull-pct-label">% when aiming at bull</span>
+            </div>
+            <p class="text-small text-muted mt-xs" id="bull-mult-display-0">Leave blank for default (0.75x).</p>
+          </div>
+        </div>
+
+        <!-- Opponent Profile -->
+        <div class="bull-advisor-player">
+          <h3>Opponent</h3>
+          <div class="bull-advisor-field">
+            <label>Their MPR</label>
+            <div class="toggle-group bull-mpr-toggle" data-player="1">
+              <button class="toggle-btn" data-mpr="5.6">5.6</button>
+              <button class="toggle-btn" data-mpr="4.9">4.9</button>
+              <button class="toggle-btn" data-mpr="4.0">4.0</button>
+              <button class="toggle-btn" data-mpr="3.6">3.6</button>
+              <button class="toggle-btn active" data-mpr="3.0">3.0</button>
+              <button class="toggle-btn" data-mpr="2.5">2.5</button>
+              <button class="toggle-btn" data-mpr="2.0">2.0</button>
+              <button class="toggle-btn" data-mpr="1.5">1.5</button>
+              <button class="toggle-btn" data-mpr="1.2">1.2</button>
+              <button class="toggle-btn" data-mpr="1.0">1.0</button>
+              <button class="toggle-btn" data-mpr="0.8">0.8</button>
+            </div>
+          </div>
+          <div class="bull-advisor-field">
+            <label>Their Bull Hit Rate</label>
+            <div class="advisor-bull-input-group">
+              <input type="number" id="bull-pct-1" class="advisor-bull-pct-input" value="" min="0" max="100" step="1" placeholder="e.g. 50">
+              <span class="advisor-bull-pct-label">% when aiming at bull</span>
+            </div>
+            <p class="text-small text-muted mt-xs" id="bull-mult-display-1">Leave blank for default (0.75x). Your best guess is fine.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Results Panel -->
+      <div id="bull-advisor-result" class="bull-advisor-result">
+        <p class="text-muted">Select your stats above to see your strategy recommendation.</p>
+      </div>
+    </section>
+
+    <!-- Section 4: Methodology Note -->
+    <section class="section">
+      <h2 class="section-title">How This Works</h2>
+      <p>Recommendations are drawn from a tournament of <strong>22 strategies</strong> competing across all combinations of:</p>
+      <ul>
+        <li><strong>11 MPR levels</strong> (0.8 to 5.6) for each player</li>
+        <li><strong>4 bull multiplier levels</strong> (0.25x, 0.50x, 0.75x, 1.00x) for each player</li>
+        <li><strong>20,000 games</strong> per strategy matchup</li>
+      </ul>
+      <p>Total: approximately <strong>18 billion simulated games</strong>. Each recommendation is backed by at least 20,000 games of direct evidence. See <a href="methodology.html">Methodology</a> for full simulation details and <a href="strategies.html">Strategies</a> for what each strategy does.</p>
+    </section>
+
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <p>Based on Frongello (2018), "Optimal Strategy in Darts Cricket." Simulation code and data available on GitHub.</p>
+    </div>
+  </footer>
+
+  <script src="js/main.js"></script>
+  <script src="js/bull-advisor.js"></script>
+</body>
+</html>

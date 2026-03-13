@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Methodology — Darts Cricket Research</title>
+  <meta name="description" content="Simulation design, skill profiles, and statistical rigor behind the darts cricket strategy research.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- Navigation -->
+  <nav class="nav">
+    <div class="nav-inner">
+      <a href="index.html" class="nav-brand">Darts Cricket Research</a>
+      <button class="hamburger-btn nav-toggle" aria-label="Toggle navigation">
+        <span></span><span></span><span></span>
+      </button>
+      <div class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="strategies.html">Strategies</a>
+        <a href="results.html">Results</a>
+        <a href="phase-switch.html">Phase Switch</a>
+        <a href="bull-analysis.html">Bull Analysis</a>
+        <a href="ai-agent.html">AI Agent</a>
+        <a href="methodology.html" class="active">Methodology</a>
+        <a href="advisor.html">Advisor</a>
+        <a href="bull-advisor.html">Bull Advisor</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <header class="hero">
+    <div class="container">
+      <h1 class="hero-title">Methodology</h1>
+      <p class="hero-subtitle">Simulation design, skill profiles, and statistical rigor</p>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="container">
+
+    <!-- Game Engine -->
+    <section class="section" id="game-engine">
+      <h2 class="section-title">Game Engine</h2>
+      <p>
+        The simulation is built around a <code>DartsCricketGame</code> class that enforces all
+        standard Cricket rules:
+      </p>
+      <ul>
+        <li><strong>7 targets:</strong> 15, 16, 17, 18, 19, 20, Bullseye</li>
+        <li><strong>3 marks to close each target</strong> (single = 1 mark, double = 2, triple = 3)</li>
+        <li><strong>3 darts per turn</strong></li>
+        <li><strong>Alternating turns,</strong> with first-player advantage mitigated by alternating who goes first each game</li>
+        <li><strong>Points scored at face value</strong> (15&ndash;20, Bull = 25) after closing, only while the opponent hasn&rsquo;t closed the same target</li>
+        <li><strong>Win condition:</strong> all 7 targets closed <em>and</em> score &ge; opponent&rsquo;s score</li>
+        <li><strong>Maximum 200 turns per game</strong> to prevent infinite loops</li>
+      </ul>
+    </section>
+
+    <!-- Skill Model -->
+    <section class="section" id="skill-profiles">
+      <h2 class="section-title">Skill Model</h2>
+      <p>
+        Frongello&rsquo;s original study tested strategies at equal skill (all players hit targets
+        with identical accuracy) and at a 95% relative skill difference.
+        We extend this with probabilistic skill profiles that model how darts actually land.
+        When a strategy aims for a specific hit type (e.g., triple 20), a random draw against
+        the player&rsquo;s profile determines the actual outcome &mdash; triple, double, single,
+        or complete miss.
+      </p>
+
+      <h3>What Is MPR?</h3>
+      <p>
+        <strong>MPR (Marks Per Round)</strong> is the standard metric for darts player skill,
+        measuring marks earned per 3-dart round. In real-world darts leagues, MPR counts
+        <em>all</em> marks thrown &mdash; including excess marks on already-closed targets.
+        Our simulation measures empirical MPR the same way. Typical real-world ranges:
+      </p>
+      <ul>
+        <li><strong>Beginner:</strong> MPR ~1.0&ndash;1.5</li>
+        <li><strong>League player:</strong> MPR ~2.0&ndash;3.0</li>
+        <li><strong>Competitive:</strong> MPR ~3.0&ndash;4.0</li>
+        <li><strong>Elite / Pro:</strong> MPR ~4.0&ndash;5.5+</li>
+      </ul>
+
+      <h3>How We Build Skill Profiles</h3>
+      <p>
+        We don&rsquo;t have access to raw professional throw data. Instead, we hand-calibrated
+        three <strong>base profiles</strong> &mdash; Amateur, Good, and Pro &mdash; informed by
+        published research on darts accuracy (Tibshirani et al., 2011; Haugh &amp; Wang, 2022).
+        Each base defines a probability distribution over outcomes when aiming for triples:
+        what fraction hit the triple, downgrade to a double, downgrade to a single, or miss entirely.
+      </p>
+      <p>
+        The key difference between base profiles isn&rsquo;t just accuracy &mdash; it&rsquo;s the
+        <strong>shape</strong> of the outcome distribution. An amateur who misses a triple is more
+        likely to hit a single (the dart lands in the wider single segment); a pro who misses is
+        relatively more likely to hit a double (they&rsquo;re close to the target but just off).
+      </p>
+
+      <h3>Three Base Profiles</h3>
+      <table class="methodology-table">
+        <thead>
+          <tr>
+            <th>Profile</th>
+            <th>MPR</th>
+            <th>Triple</th>
+            <th>Double</th>
+            <th>Single</th>
+            <th>Miss</th>
+            <th>Real-World Equivalent</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Pro</strong></td>
+            <td>5.64</td>
+            <td>41%</td>
+            <td>20%</td>
+            <td>25%</td>
+            <td>14%</td>
+            <td>PDC Tour level</td>
+          </tr>
+          <tr>
+            <td><strong>Good</strong></td>
+            <td>4.92</td>
+            <td>30%</td>
+            <td>22%</td>
+            <td>30%</td>
+            <td>18%</td>
+            <td>Strong league player</td>
+          </tr>
+          <tr>
+            <td><strong>Amateur</strong></td>
+            <td>3.60</td>
+            <td>15%</td>
+            <td>20%</td>
+            <td>35%</td>
+            <td>30%</td>
+            <td>Casual league player</td>
+          </tr>
+        </tbody>
+      </table>
+      <p class="text-small text-muted">
+        Outcomes shown are for aiming at triples. Each base profile also defines distributions
+        for aiming at doubles and singles (used when strategies target those hit types).
+        MPR values are theoretical: <code>3 &times; (T&times;3 + D&times;2 + S&times;1)</code>.
+      </p>
+
+      <h3>Scaling to 11 Skill Levels</h3>
+      <p>
+        To cover the full range of real-world ability, we generate <strong>11 skill levels</strong>
+        from these three bases. For each target MPR, the system:
+      </p>
+      <ol>
+        <li>Picks the closest base profile by MPR distance</li>
+        <li>Computes a scale factor: <code>scale = target_MPR / base_MPR</code></li>
+        <li>Multiplies <em>all</em> non-miss probabilities (triple, double, single) by that factor uniformly</li>
+        <li>Assigns the freed probability mass to &ldquo;miss&rdquo;</li>
+      </ol>
+      <p>
+        This preserves each base profile&rsquo;s characteristic outcome <em>shape</em> (the ratio
+        of triple:double:single downgrades) while adjusting overall accuracy. Three levels
+        (MPR 3.6, 4.9, 5.6) use base profiles directly; the other eight are scaled versions.
+      </p>
+
+      <h3>All 11 Skill Levels</h3>
+      <p>
+        The complete set of outcome distributions when aiming for triples at each skill level.
+        Note the shape change between MPR 4.0 and 4.9 where the base profile switches from
+        Amateur to Good:
+      </p>
+      <table class="methodology-table">
+        <thead>
+          <tr>
+            <th>MPR</th>
+            <th>Base</th>
+            <th>Triple</th>
+            <th>Double</th>
+            <th>Single</th>
+            <th>Miss</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>0.80</td>
+            <td>Amateur &times;0.22</td>
+            <td>3.3%</td>
+            <td>4.4%</td>
+            <td>7.8%</td>
+            <td>84.4%</td>
+          </tr>
+          <tr>
+            <td>1.00</td>
+            <td>Amateur &times;0.28</td>
+            <td>4.2%</td>
+            <td>5.6%</td>
+            <td>9.7%</td>
+            <td>80.6%</td>
+          </tr>
+          <tr>
+            <td>1.20</td>
+            <td>Amateur &times;0.33</td>
+            <td>5.0%</td>
+            <td>6.7%</td>
+            <td>11.7%</td>
+            <td>76.7%</td>
+          </tr>
+          <tr>
+            <td>1.50</td>
+            <td>Amateur &times;0.42</td>
+            <td>6.3%</td>
+            <td>8.3%</td>
+            <td>14.6%</td>
+            <td>70.8%</td>
+          </tr>
+          <tr>
+            <td>2.00</td>
+            <td>Amateur &times;0.56</td>
+            <td>8.3%</td>
+            <td>11.1%</td>
+            <td>19.4%</td>
+            <td>61.1%</td>
+          </tr>
+          <tr>
+            <td>2.50</td>
+            <td>Amateur &times;0.69</td>
+            <td>10.4%</td>
+            <td>13.9%</td>
+            <td>24.3%</td>
+            <td>51.4%</td>
+          </tr>
+          <tr>
+            <td>3.00</td>
+            <td>Amateur &times;0.83</td>
+            <td>12.5%</td>
+            <td>16.7%</td>
+            <td>29.2%</td>
+            <td>41.7%</td>
+          </tr>
+          <tr class="highlight">
+            <td>3.60</td>
+            <td>Amateur (direct)</td>
+            <td>15.0%</td>
+            <td>20.0%</td>
+            <td>35.0%</td>
+            <td>30.0%</td>
+          </tr>
+          <tr>
+            <td>4.00</td>
+            <td>Amateur &times;1.11</td>
+            <td>16.7%</td>
+            <td>22.2%</td>
+            <td>38.9%</td>
+            <td>22.2%</td>
+          </tr>
+          <tr class="highlight">
+            <td>4.92</td>
+            <td>Good (direct)</td>
+            <td>30.0%</td>
+            <td>22.0%</td>
+            <td>30.0%</td>
+            <td>18.0%</td>
+          </tr>
+          <tr class="highlight">
+            <td>5.64</td>
+            <td>Pro (direct)</td>
+            <td>41.0%</td>
+            <td>20.0%</td>
+            <td>25.0%</td>
+            <td>14.0%</td>
+          </tr>
+        </tbody>
+      </table>
+      <p class="text-small text-muted">
+        Highlighted rows use base profiles directly. The MPR values shown on the Results page
+        are <em>empirical</em> (measured from tournament games), which are slightly lower than
+        the theoretical values here.
+      </p>
+
+      <h3>Outcome Distribution by Skill Level</h3>
+      <p>
+        This chart visualizes the outcome breakdown when aiming for triples at each of the 11
+        skill levels. At the lowest levels, misses dominate (&gt;80%); at pro level, triples are
+        the most common outcome. Notice the shape shift between MPR 4.0 and 4.9 where the base
+        switches from Amateur to Good &mdash; the triple percentage jumps while singles drop.
+      </p>
+
+      <!-- Stacked bar chart: outcome distribution across skill levels -->
+      <div style="overflow-x: auto; margin: var(--space-lg) 0;">
+        <svg viewBox="0 0 720 320" style="width: 100%; max-width: 720px; display: block; margin: 0 auto;"
+             font-family="Inter, system-ui, sans-serif" font-size="11">
+          <!-- Title -->
+          <text x="360" y="18" text-anchor="middle" font-size="13" font-weight="600" fill="#2d2d2d">
+            Outcome Distribution When Aiming Triples
+          </text>
+
+          <!-- Y axis labels — baseline y=276, top y=44, height=232px -->
+          <text x="38" y="48" text-anchor="end" fill="#666" font-size="10">100%</text>
+          <text x="38" y="106" text-anchor="end" fill="#666" font-size="10">75%</text>
+          <text x="38" y="164" text-anchor="end" fill="#666" font-size="10">50%</text>
+          <text x="38" y="222" text-anchor="end" fill="#666" font-size="10">25%</text>
+          <text x="38" y="280" text-anchor="end" fill="#666" font-size="10">0%</text>
+
+          <!-- Grid lines -->
+          <line x1="44" y1="44" x2="710" y2="44" stroke="#e0e0e0" stroke-width="0.5"/>
+          <line x1="44" y1="102" x2="710" y2="102" stroke="#e0e0e0" stroke-width="0.5"/>
+          <line x1="44" y1="160" x2="710" y2="160" stroke="#e0e0e0" stroke-width="0.5"/>
+          <line x1="44" y1="218" x2="710" y2="218" stroke="#e0e0e0" stroke-width="0.5"/>
+          <line x1="44" y1="276" x2="710" y2="276" stroke="#999" stroke-width="1"/>
+
+          <!-- Stacked bars: baseline y=276, 232px = 100%. Each bar 50px wide, 60px pitch. -->
+          <!-- Stack order bottom→top: Miss (gray), Single (orange), Double (blue), Triple (green) -->
+
+          <!-- MPR 0.8: T=3.3% D=4.4% S=7.8% M=84.4% -->
+          <rect x="60" y="80.2" width="50" height="195.8" fill="#bdc3c7" rx="1"/>
+          <rect x="60" y="62.1" width="50" height="18.1" fill="#f39c12" rx="1"/>
+          <rect x="60" y="51.9" width="50" height="10.2" fill="#3498db" rx="1"/>
+          <rect x="60" y="44.2" width="50" height="7.7" fill="#2ecc71" rx="1"/>
+
+          <!-- MPR 1.0: T=4.2% D=5.6% S=9.7% M=80.6% -->
+          <rect x="120" y="89.0" width="50" height="187.0" fill="#bdc3c7" rx="1"/>
+          <rect x="120" y="66.5" width="50" height="22.5" fill="#f39c12" rx="1"/>
+          <rect x="120" y="53.5" width="50" height="13.0" fill="#3498db" rx="1"/>
+          <rect x="120" y="43.8" width="50" height="9.7" fill="#2ecc71" rx="1"/>
+
+          <!-- MPR 1.2: T=5.0% D=6.7% S=11.7% M=76.7% -->
+          <rect x="180" y="98.1" width="50" height="177.9" fill="#bdc3c7" rx="1"/>
+          <rect x="180" y="70.9" width="50" height="27.1" fill="#f39c12" rx="1"/>
+          <rect x="180" y="55.4" width="50" height="15.5" fill="#3498db" rx="1"/>
+          <rect x="180" y="43.8" width="50" height="11.6" fill="#2ecc71" rx="1"/>
+
+          <!-- MPR 1.5: T=6.3% D=8.3% S=14.6% M=70.8% -->
+          <rect x="240" y="111.7" width="50" height="164.3" fill="#bdc3c7" rx="1"/>
+          <rect x="240" y="77.9" width="50" height="33.9" fill="#f39c12" rx="1"/>
+          <rect x="240" y="58.6" width="50" height="19.3" fill="#3498db" rx="1"/>
+          <rect x="240" y="44.0" width="50" height="14.6" fill="#2ecc71" rx="1"/>
+
+          <!-- MPR 2.0: T=8.3% D=11.1% S=19.4% M=61.1% -->
+          <rect x="300" y="134.2" width="50" height="141.8" fill="#bdc3c7" rx="1"/>
+          <rect x="300" y="89.2" width="50" height="45.0" fill="#f39c12" rx="1"/>
+          <rect x="300" y="63.5" width="50" height="25.8" fill="#3498db" rx="1"/>
+          <rect x="300" y="44.2" width="50" height="19.3" fill="#2ecc71" rx="1"/>
+
+          <!-- MPR 2.5: T=10.4% D=13.9% S=24.3% M=51.4% -->
+          <rect x="360" y="156.8" width="50" height="119.2" fill="#bdc3c7" rx="1"/>
+          <rect x="360" y="100.4" width="50" height="56.4" fill="#f39c12" rx="1"/>
+          <rect x="360" y="68.1" width="50" height="32.2" fill="#3498db" rx="1"/>
+          <rect x="360" y="44.0" width="50" height="24.1" fill="#2ecc71" rx="1"/>
+
+          <!-- MPR 3.0: T=12.5% D=16.7% S=29.2% M=41.7% -->
+          <rect x="420" y="179.3" width="50" height="96.7" fill="#bdc3c7" rx="1"/>
+          <rect x="420" y="111.5" width="50" height="67.7" fill="#f39c12" rx="1"/>
+          <rect x="420" y="72.8" width="50" height="38.7" fill="#3498db" rx="1"/>
+          <rect x="420" y="43.8" width="50" height="29.0" fill="#2ecc71" rx="1"/>
+
+          <!-- MPR 3.6: T=15.0% D=20.0% S=35.0% M=30.0% ★ Amateur base -->
+          <rect x="480" y="206.4" width="50" height="69.6" fill="#bdc3c7" rx="1" stroke="#e67e22" stroke-width="1.5"/>
+          <rect x="480" y="125.2" width="50" height="81.2" fill="#f39c12" rx="1" stroke="#e67e22" stroke-width="1.5"/>
+          <rect x="480" y="78.8" width="50" height="46.4" fill="#3498db" rx="1" stroke="#e67e22" stroke-width="1.5"/>
+          <rect x="480" y="44.0" width="50" height="34.8" fill="#2ecc71" rx="1" stroke="#e67e22" stroke-width="1.5"/>
+
+          <!-- MPR 4.0: T=16.7% D=22.2% S=38.9% M=22.2% (last Amateur-based) -->
+          <rect x="540" y="224.5" width="50" height="51.5" fill="#bdc3c7" rx="1"/>
+          <rect x="540" y="134.2" width="50" height="90.2" fill="#f39c12" rx="1"/>
+          <rect x="540" y="82.7" width="50" height="51.5" fill="#3498db" rx="1"/>
+          <rect x="540" y="44.0" width="50" height="38.7" fill="#2ecc71" rx="1"/>
+
+          <!-- MPR 4.9: T=30.0% D=22.0% S=30.0% M=18.0% ★ Good base — SHAPE SHIFT -->
+          <rect x="600" y="234.2" width="50" height="41.8" fill="#bdc3c7" rx="1" stroke="#e67e22" stroke-width="1.5"/>
+          <rect x="600" y="164.6" width="50" height="69.6" fill="#f39c12" rx="1" stroke="#e67e22" stroke-width="1.5"/>
+          <rect x="600" y="113.6" width="50" height="51.0" fill="#3498db" rx="1" stroke="#e67e22" stroke-width="1.5"/>
+          <rect x="600" y="44.0" width="50" height="69.6" fill="#2ecc71" rx="1" stroke="#e67e22" stroke-width="1.5"/>
+
+          <!-- MPR 5.6: T=41.0% D=20.0% S=25.0% M=14.0% ★ Pro base -->
+          <rect x="660" y="243.5" width="50" height="32.5" fill="#bdc3c7" rx="1" stroke="#e67e22" stroke-width="1.5"/>
+          <rect x="660" y="185.5" width="50" height="58.0" fill="#f39c12" rx="1" stroke="#e67e22" stroke-width="1.5"/>
+          <rect x="660" y="139.1" width="50" height="46.4" fill="#3498db" rx="1" stroke="#e67e22" stroke-width="1.5"/>
+          <rect x="660" y="44.0" width="50" height="95.1" fill="#2ecc71" rx="1" stroke="#e67e22" stroke-width="1.5"/>
+
+          <!-- Shape-shift annotation arrow -->
+          <line x1="572" y1="36" x2="598" y2="36" stroke="#e67e22" stroke-width="1.5" marker-end="url(#arrowhead)"/>
+          <text x="585" y="33" text-anchor="middle" fill="#e67e22" font-size="8" font-weight="600">shape shift</text>
+          <defs>
+            <marker id="arrowhead" markerWidth="6" markerHeight="4" refX="6" refY="2" orient="auto">
+              <polygon points="0 0, 6 2, 0 4" fill="#e67e22"/>
+            </marker>
+          </defs>
+
+          <!-- X axis labels -->
+          <text x="85" y="295" text-anchor="middle" fill="#666" font-size="10">0.8</text>
+          <text x="145" y="295" text-anchor="middle" fill="#666" font-size="10">1.0</text>
+          <text x="205" y="295" text-anchor="middle" fill="#666" font-size="10">1.2</text>
+          <text x="265" y="295" text-anchor="middle" fill="#666" font-size="10">1.5</text>
+          <text x="325" y="295" text-anchor="middle" fill="#666" font-size="10">2.0</text>
+          <text x="385" y="295" text-anchor="middle" fill="#666" font-size="10">2.5</text>
+          <text x="445" y="295" text-anchor="middle" fill="#666" font-size="10">3.0</text>
+          <text x="505" y="295" text-anchor="middle" fill="#666" font-size="10">3.6</text>
+          <text x="565" y="295" text-anchor="middle" fill="#666" font-size="10">4.0</text>
+          <text x="625" y="295" text-anchor="middle" fill="#666" font-size="10">4.9</text>
+          <text x="685" y="295" text-anchor="middle" fill="#666" font-size="10">5.6</text>
+          <text x="380" y="315" text-anchor="middle" fill="#666" font-size="11" font-weight="600">Theoretical MPR</text>
+
+          <!-- Legend -->
+          <rect x="120" y="30" width="12" height="8" fill="#2ecc71" rx="1"/>
+          <text x="136" y="37" fill="#444" font-size="10">Triple</text>
+          <rect x="185" y="30" width="12" height="8" fill="#3498db" rx="1"/>
+          <text x="201" y="37" fill="#444" font-size="10">Double</text>
+          <rect x="255" y="30" width="12" height="8" fill="#f39c12" rx="1"/>
+          <text x="271" y="37" fill="#444" font-size="10">Single</text>
+          <rect x="325" y="30" width="12" height="8" fill="#bdc3c7" rx="1"/>
+          <text x="341" y="37" fill="#444" font-size="10">Miss</text>
+          <rect x="390" y="28" width="12" height="12" fill="none" stroke="#e67e22" stroke-width="1.5" rx="1"/>
+          <text x="406" y="38" fill="#444" font-size="10">Base profile</text>
+        </svg>
+      </div>
+
+      <h3>The Shape Discontinuity</h3>
+      <p>
+        The chart reveals an important artifact of this approach. From MPR 0.8 through 4.0,
+        all profiles are scaled from Amateur &mdash; so they share the same outcome <em>shape</em>
+        where singles are always more common than triples (a missed triple is more likely to land
+        in the wider single ring). At MPR 4.9, the base switches to Good, and at 5.6 to Pro.
+        These profiles have a fundamentally different shape: triples are as common as or more
+        common than singles, reflecting that skilled players miss by smaller margins.
+      </p>
+      <p>
+        This means the jump from MPR 4.0 to 4.9 isn&rsquo;t just an accuracy increase &mdash;
+        it&rsquo;s a qualitative change in <em>how</em> darts miss. In reality, this transition
+        is gradual. Our three-base system approximates it as a step function. This is a known
+        limitation, but the alternative (fitting continuous models to professional data we don&rsquo;t
+        have access to) would introduce its own assumptions.
+      </p>
+
+      <h3>Empirical vs. Theoretical MPR</h3>
+      <p>
+        The MPR values in the table above are <strong>theoretical</strong> &mdash; the expected
+        marks per round if every dart aimed at triples:
+      </p>
+      <p>
+        <code>Theoretical MPR = 3 &times; (T&times;3 + D&times;2 + S&times;1)</code>
+      </p>
+      <p>
+        The <strong>empirical MPR</strong> values shown on the Results page are measured from
+        actual tournament games, where strategies don&rsquo;t always aim for triples. Strategies
+        sometimes aim for singles or doubles depending on game state, which slightly lowers the
+        observed MPR. The empirical values are typically 1&ndash;5% lower than theoretical.
+      </p>
+    </section>
+
+    <!-- Tournament Design -->
+    <section class="section" id="tournament-design">
+      <h2 class="section-title">Tournament Design</h2>
+      <ul>
+        <li><strong>Format:</strong> Full round-robin &mdash; every strategy plays every other strategy</li>
+        <li><strong>22 strategies:</strong> S1&ndash;S17 (Frongello), E1&ndash;E4 (experimental), PS (Phase Switch)</li>
+        <li><strong>Matchups per level:</strong> 231 (upper triangle of 22&times;22, mirrored for symmetry)</li>
+        <li><strong>Games per matchup:</strong> 20,000 (with alternating first player)</li>
+        <li><strong>Total games:</strong> ~50 million across all 11 MPR levels</li>
+        <li><strong>Symmetry:</strong> A vs B and B vs A from the same 20,000 games. If A wins 55%, B wins 45%.</li>
+        <li><strong>Diagonal:</strong> Always 50% (a strategy playing itself)</li>
+      </ul>
+    </section>
+
+    <!-- Statistical Considerations -->
+    <section class="section" id="statistical-considerations">
+      <h2 class="section-title">Statistical Considerations</h2>
+      <p>
+        <strong>Sample size:</strong> 20,000 games per matchup gives a standard error of ~0.35% for a
+        50% win rate (&radic;(0.5&times;0.5/20000) &asymp; 0.0035). A 2% difference is statistically
+        significant at p &lt; 0.001.
+      </p>
+      <p>
+        <strong>First-player advantage:</strong> Mitigated by alternating who throws first. In
+        even-numbered games, player B goes first. This ensures neither strategy has a systematic
+        advantage from turn order.
+      </p>
+      <p>
+        <strong>Maximum turns:</strong> Games are capped at 200 turns to prevent infinite loops with
+        degenerate strategy pairs. In practice, pro-level games average ~18 turns and amateur-level
+        games ~22 turns. Even at the lowest skill level, games average ~69&ndash;84 turns &mdash;
+        well below the limit.
+      </p>
+      <p>
+        <strong>Deterministic strategies:</strong> All strategy bots are deterministic given the game
+        state. The only randomness comes from the skill profile&rsquo;s throw resolution. This means
+        results are fully reproducible given the same random seed.
+      </p>
+    </section>
+
+    <!-- Comparison with Frongello -->
+    <section class="section" id="comparison">
+      <h2 class="section-title">Comparison with Frongello</h2>
+      <table class="methodology-table">
+        <thead>
+          <tr>
+            <th>Aspect</th>
+            <th>Frongello (2018)</th>
+            <th>This Study</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Strategies</td>
+            <td>17 (S1&ndash;S17)</td>
+            <td>22 (S1&ndash;S17, E1&ndash;E4, PS)</td>
+          </tr>
+          <tr>
+            <td>Skill model</td>
+            <td>Uniform accuracy + 95% relative</td>
+            <td>Probabilistic (11 MPR levels)</td>
+          </tr>
+          <tr>
+            <td>Games per matchup</td>
+            <td>20,000</td>
+            <td>20,000</td>
+          </tr>
+          <tr>
+            <td>Skill levels</td>
+            <td>2 (equal + 95% relative)</td>
+            <td>11 (MPR 0.8&ndash;5.6)</td>
+          </tr>
+          <tr>
+            <td>Key finding</td>
+            <td>S2 optimal (equal); S6 optimal (advantage)</td>
+            <td>PS beats both at high skill</td>
+          </tr>
+          <tr>
+            <td>Chase conclusion</td>
+            <td>Never chase</td>
+            <td>Confirmed</td>
+          </tr>
+          <tr>
+            <td>Extra darts</td>
+            <td>Skill-dependent (S2 &gt; S6 equal; S6 &gt; S2 advantage)</td>
+            <td>Negative at equal skill (disrupts tempo)</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- Limitations -->
+    <section class="section" id="limitations">
+      <h2 class="section-title">Limitations</h2>
+      <ul>
+        <li>
+          <strong>Strategy space:</strong> We tested 22 strategies but the space of possible strategies
+          is infinite. There may be better strategies we haven&rsquo;t explored.
+        </li>
+        <li>
+          <strong>No learning:</strong> All strategies are fixed rules. A reinforcement learning agent
+          might discover different principles.
+        </li>
+        <li>
+          <strong>Simplified skill model:</strong> Real darts have target adjacency effects (missing 20
+          might hit 1 or 5). Our model treats misses as complete misses.
+        </li>
+        <li>
+          <strong>No psychological factors:</strong> Real games involve pressure, fatigue, and opponent
+          observation. Our simulation is purely mathematical.
+        </li>
+      </ul>
+    </section>
+
+    <!-- References -->
+    <section class="section" id="references">
+      <h2 class="section-title">References</h2>
+      <ol>
+        <li>
+          Frongello, A. (2018). &ldquo;Optimal Strategy in Darts Cricket.&rdquo;
+          <em>UNLV Theses, Dissertations, Professional Papers, and Capstones.</em> 3464.
+        </li>
+        <li>
+          Tibshirani, R. J., Price, A., &amp; Taylor, J. (2011). &ldquo;A statistician plays darts.&rdquo;
+          <em>Journal of the Royal Statistical Society: Series A,</em> 174(1), 213&ndash;226.
+        </li>
+        <li>
+          Haugh, M. B., &amp; Wang, C. (2022). &ldquo;Play Like the Pros? Solving the Game of Darts as a
+          Dynamic Zero-Sum Game.&rdquo; <em>INFORMS Journal on Computing.</em>
+        </li>
+      </ol>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <p>Based on Frongello (2018), "Optimal Strategy in Darts Cricket." Simulation code and data available on GitHub.</p>
+    </div>
+  </footer>
+
+  <script src="js/main.js"></script>
+</body>
+</html>

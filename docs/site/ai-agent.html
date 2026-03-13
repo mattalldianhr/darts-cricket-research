@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The AI Agent &mdash; Darts Cricket Research</title>
+  <meta name="description" content="How a reinforcement learning agent discovered a novel turn-order-dependent darts cricket strategy that no hand-crafted bot uses.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    .version-timeline {
+      position: relative;
+      padding-left: var(--space-xl);
+      margin: var(--space-lg) 0;
+    }
+
+    .version-timeline::before {
+      content: '';
+      position: absolute;
+      left: 6px;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background: var(--color-card-border);
+    }
+
+    .version-entry {
+      position: relative;
+      margin-bottom: var(--space-lg);
+    }
+
+    .version-entry::before {
+      content: '';
+      position: absolute;
+      left: calc(-1 * var(--space-xl) + 2px);
+      top: 6px;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--color-accent);
+      border: 2px solid #fff;
+    }
+
+    .version-entry.version-failure::before {
+      background: var(--color-red);
+    }
+
+    .version-entry.version-breakthrough::before {
+      background: var(--color-green);
+      width: 12px;
+      height: 12px;
+      left: calc(-1 * var(--space-xl) + 1px);
+    }
+
+    .version-label {
+      font-family: var(--font-heading);
+      font-weight: 700;
+      font-size: 0.85rem;
+      color: var(--color-accent);
+      margin-bottom: var(--space-xs);
+    }
+
+    .version-failure .version-label {
+      color: var(--color-red);
+    }
+
+    .version-breakthrough .version-label {
+      color: var(--color-green);
+    }
+
+    .architecture-diagram {
+      background: var(--color-card-bg);
+      border: 1px solid var(--color-card-border);
+      border-radius: var(--border-radius);
+      padding: var(--space-lg);
+      font-family: var(--font-mono, monospace);
+      font-size: 0.8rem;
+      line-height: 1.6;
+      overflow-x: auto;
+      white-space: pre;
+      margin: var(--space-lg) 0;
+    }
+
+    .bug-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: var(--space-md);
+      margin: var(--space-lg) 0;
+    }
+
+    .bug-card {
+      background: var(--color-card-bg);
+      border: 1px solid var(--color-card-border);
+      border-radius: var(--border-radius);
+      padding: var(--space-md);
+    }
+
+    .bug-card h4 {
+      font-size: 0.85rem;
+      margin: 0 0 var(--space-xs) 0;
+    }
+
+    .bug-card p {
+      font-size: 0.85rem;
+      margin: 0;
+    }
+
+    .strategy-comparison {
+      width: 100%;
+      margin: var(--space-lg) 0;
+      border-collapse: collapse;
+    }
+
+    .strategy-comparison th,
+    .strategy-comparison td {
+      padding: var(--space-sm) var(--space-md);
+      text-align: left;
+      border-bottom: 1px solid var(--color-card-border);
+      font-size: 0.85rem;
+    }
+
+    .strategy-comparison th {
+      font-weight: 600;
+      background: var(--color-card-bg);
+    }
+
+    .strategy-comparison .highlight-row {
+      background: rgba(59, 130, 246, 0.05);
+      font-weight: 600;
+    }
+
+    @media (max-width: 768px) {
+      .bug-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navigation -->
+  <nav class="nav">
+    <div class="nav-inner">
+      <a href="index.html" class="nav-brand">Darts Cricket Research</a>
+      <button class="hamburger-btn nav-toggle" aria-label="Toggle navigation">
+        <span></span><span></span><span></span>
+      </button>
+      <div class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="strategies.html">Strategies</a>
+        <a href="results.html">Results</a>
+        <a href="phase-switch.html">Phase Switch</a>
+        <a href="bull-analysis.html">Bull Analysis</a>
+        <a href="ai-agent.html" class="active">AI Agent</a>
+        <a href="methodology.html">Methodology</a>
+        <a href="advisor.html">Advisor</a>
+        <a href="bull-advisor.html">Bull Advisor</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <header class="hero">
+    <div class="container">
+      <h1 class="hero-title">The AI Agent</h1>
+      <p class="hero-subtitle">A reinforcement learning agent that discovered a strategy no human designed</p>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="container">
+
+    <!-- The Question -->
+    <section class="section" id="the-question">
+      <h2 class="section-title">The Question</h2>
+      <p>
+        The tournament analysis identified 28 hand-crafted strategies and tested them exhaustively. But every
+        one of those strategies was designed by a human with assumptions about how the game should be played.
+        What if we removed the human from the loop entirely?
+      </p>
+      <p>
+        We trained a reinforcement learning agent to play darts cricket from scratch &mdash; no strategy
+        rules, no opening book, no notion of &ldquo;scoring mode&rdquo; or &ldquo;covering mode.&rdquo;
+        The agent sees only the board state and learns from wins and losses. After millions of games against
+        the strongest hand-crafted bots, it discovered something none of them do:
+        <strong>adapt its opening based on turn order.</strong>
+      </p>
+    </section>
+
+    <!-- The Discovery -->
+    <section class="section" id="discovery">
+      <h2 class="section-title">What the Agent Learned</h2>
+
+      <div class="callout">
+        <p class="callout-title">Turn-Order-Dependent Opening</p>
+        <p>
+          <strong>Going first &rarr; always open 20</strong> (100% consistency).<br>
+          <strong>Going second &rarr; always open 18</strong> (93% consistency).
+        </p>
+        <p>
+          No Frongello strategy, and none of the experimental strategies (E1&ndash;E11), adapts to turn
+          order. All 28 hand-crafted bots play identically regardless of who throws first. The agent
+          discovered this distinction entirely on its own.
+        </p>
+      </div>
+
+      <p>
+        The logic is intuitive once you see it. Going first, you have the tempo advantage &mdash; secure
+        the highest-value target (20) immediately. Going second, your opponent likely started on 20,
+        so pivot to 18 and avoid direct competition on the same number. After the opening, the agent
+        follows a consistent closing order: 19 next, then fill the remaining targets.
+      </p>
+
+      <h3>Adaptive Mid-Game Behavior</h3>
+      <p>
+        Beyond the opening, the agent dynamically balances scoring and closing based on game state:
+      </p>
+      <ul>
+        <li>
+          <strong>Early game (1&ndash;2 targets closed):</strong> 63&ndash;76% closing &mdash; build the foundation first.
+        </li>
+        <li>
+          <strong>Mid game (3+ targets closed):</strong> 69&ndash;72% scoring &mdash; capitalize on open
+          scoring lanes.
+        </li>
+        <li>
+          <strong>Losing by a large margin:</strong> 69% scoring &mdash; catch up on points before closing out.
+        </li>
+        <li>
+          <strong>Winning by a large margin:</strong> 51% closing &mdash; shut the game down.
+        </li>
+      </ul>
+      <p>
+        The agent also shows opponent-specific adaptation. Against S2 (the strongest Frongello strategy),
+        it flips to 57% closing when behind &mdash; respecting S2&rsquo;s sophisticated covering logic
+        by racing to close rather than trying to outscore it.
+      </p>
+
+      <h3>Chasing: Almost Never</h3>
+      <p>
+        When the opponent threatens a target (2 marks toward closing), the agent chases only 31% of the
+        time. It mostly ignores the opponent&rsquo;s progress and follows its own plan &mdash; independently
+        confirming Frongello&rsquo;s &ldquo;never chase&rdquo; finding through pure trial and error.
+      </p>
+    </section>
+
+    <!-- The Journey -->
+    <section class="section" id="journey">
+      <h2 class="section-title">The Journey: Three Approaches</h2>
+      <p>
+        Getting here required three fundamentally different approaches and 19 iterations. Each failure
+        taught something essential about what it takes to learn strategy in a complex game.
+      </p>
+
+      <h3>Attempt 1: Tabular Q-Learning</h3>
+      <p>
+        The simplest approach: maintain a lookup table mapping every game state to the value of each
+        action. After each game, update the table using the Bellman equation. This works beautifully
+        for small games, but darts cricket&rsquo;s state space &mdash; two scores plus 14 mark counts
+        &mdash; creates millions of unique states. The table grows unbounded, most entries are visited
+        only once, and the agent plateaus around 45% win rate against basic bots.
+      </p>
+
+      <h3>Attempt 2: Deep Q-Network (DQN)</h3>
+      <p>
+        Replace the table with a neural network that generalizes across similar states. A standard
+        fully-connected network (128&times;128) with experience replay and a frozen target network.
+        This should scale better &mdash; but it struggled for a subtle reason.
+      </p>
+      <p>
+        DQN treats the 20 possible actions (7 targets &times; 3 hit types, minus bull triple) as independent, unrelated
+        choices. The network has no structural understanding that &ldquo;aim at 20&rdquo; and &ldquo;aim
+        at 19&rdquo; are similar decisions, or that &ldquo;single&rdquo; and &ldquo;triple&rdquo; differ
+        only in magnitude. Every relationship must be learned from scratch, and gradient updates for
+        one action interfere with others. DQN never broke past 45% win rate.
+      </p>
+
+      <h3>Attempt 3: Branching Actor-Critic (A2C)</h3>
+      <p>
+        The breakthrough architecture. Instead of one flat output, the network splits into three
+        specialized heads:
+      </p>
+
+      <div class="architecture-diagram">Input: 19 features (score differential, 14 marks, 4 aggregate counts)
+    &darr;
+Shared Trunk: 128 &rarr; ReLU &rarr; 128 &rarr; ReLU
+    &darr;
+    &boxdr;&boxh;&boxh;&boxh;&boxh;&boxh;&boxh;&boxh;&boxh;&boxh;&boxh;&boxh;&boxh;&boxh;&boxh;&boxh;&boxh;&boxh;&boxh;&boxh;&boxh;&boxh;&boxh;&boxh;&boxh;&boxh;&boxh;&boxh;&boxh;&boxh;&boxh;&boxh;&boxh;&boxh;&boxh;&boxh;&boxh;&boxh;&boxdl;
+    &boxv;                                     &boxv;
+Target Head       HitType Head       Value Head
+64 &rarr; ReLU &rarr; 7    64 &rarr; ReLU &rarr; 3    64 &rarr; ReLU &rarr; 1
+(which number?)   (single/dbl/tri?)  (how good is
+                                      this state?)</div>
+
+      <p>
+        Each head learns its own domain. The target head figures out <em>which number to aim at</em>
+        based on board state; the hit-type head learns <em>how aggressively to aim</em> based on skill
+        level. The value head provides the temporal-difference signal that drives learning. Two critical
+        mechanisms keep the agent honest:
+      </p>
+      <ul>
+        <li>
+          <strong>Action masking</strong> &mdash; Targets that both players have closed are masked
+          with &minus;&infin; logits, preventing the network from wasting darts on dead numbers. Similarly,
+          the &ldquo;triple&rdquo; option is masked when aiming at bull (which has no triple).
+        </li>
+        <li>
+          <strong>Terminal-only rewards</strong> &mdash; The agent receives no intermediate feedback for
+          closing a number or scoring points. Only the final outcome matters: +100 for a win, &minus;100
+          for a loss. This prevents reward hacking (earlier versions learned to throw at bull every time
+          because it gave the highest per-dart closing bonus).
+        </li>
+      </ul>
+    </section>
+
+    <!-- Training -->
+    <section class="section" id="training">
+      <h2 class="section-title">Training: 12 Bugs and 3 Breakthroughs</h2>
+      <p>
+        The architecture was only the beginning. Making it actually learn took 19 versions and the
+        discovery and resolution of 12 distinct training bugs. Three breakthroughs shaped the final result.
+      </p>
+
+      <h3>Breakthrough 1: Supervised Pre-Training</h3>
+      <p>
+        A randomly initialized network explores blindly &mdash; throwing darts at every number equally,
+        learning nothing for thousands of games. The solution: bootstrap the network by watching expert
+        strategy bots play. We generated training data from four Frongello strategies (S1, S2, S6, S10),
+        recording every dart decision, and trained the network via supervised learning with
+        <strong>label smoothing</strong> (0.1) to prevent the output probabilities from collapsing to
+        near-certainty.
+      </p>
+      <p>
+        After pre-training, the network opens with 20-triple ~91% of the time &mdash; sensible but not
+        locked in. It has a starting intuition but remains open to discovering something better.
+      </p>
+
+      <h3>Breakthrough 2: Prune the Easy Opponents</h3>
+      <p>
+        This was the single most important discovery. Version 16 trained against all 28 bots
+        (S1&ndash;S17 plus E1&ndash;E11). The agent won 48.5% overall &mdash; but against the 13
+        hardest bots, it won only <strong>43%</strong>, worse than the simple sequential closer (S1
+        at 49.1%).
+      </p>
+      <p>
+        The problem: easy opponents like E6 (99.7% win rate) and E7 (86.7%) produced a &ldquo;keep
+        doing what you&rsquo;re doing&rdquo; gradient signal. Hard opponents produced a &ldquo;you need
+        to improve&rdquo; signal. These contradicted each other, and the easy wins drowned out the
+        hard losses.
+      </p>
+      <p>
+        <strong>The fix was simple: remove every bot the agent could beat more than 45% of the time.</strong>
+        With only 13 hard bots remaining, every game produced useful learning signal. Win rate climbed
+        from 5% to 55% over 2 million games, and the novel 20/18 opening split emerged.
+      </p>
+
+      <h3>Breakthrough 3: The Entropy Floor</h3>
+      <p>
+        Version 17 peaked at 55% win rate after ~4.4 million games &mdash; then started declining.
+        The agent was overtraining: its entropy coefficient had annealed to 0.005, making the policy
+        nearly deterministic. It could no longer adapt to slight variations in opponent behavior.
+      </p>
+      <p>
+        Raising the entropy floor from 0.005 to <strong>0.01</strong> solved the problem completely.
+        Version 19, trained with the higher floor, held stable at 49.3% win rate with zero decline
+        over 2 million additional games. The lower absolute number reflects a tighter bot pool (the
+        two easiest remaining bots were also removed), not a weaker agent.
+      </p>
+    </section>
+
+    <!-- The 12 Bugs -->
+    <section class="section" id="bugs">
+      <h2 class="section-title">The 12 Bugs</h2>
+      <p>
+        Beyond the three breakthroughs, the agent&rsquo;s development required solving 12 distinct
+        technical problems. Each one caused either training collapse, reward hacking, or silently
+        invalid results.
+      </p>
+
+      <div class="bug-grid">
+        <div class="bug-card">
+          <h4>1. Bull Reward Bias</h4>
+          <p>Agent throws bull 100% of the time. Closing bonus &times; face value (25) makes bull the highest-reward target. Fix: terminal-only rewards.</p>
+        </div>
+        <div class="bug-card">
+          <h4>2. Peaked Pre-training</h4>
+          <p>After supervised pre-training, softmax outputs collapse to 99.99% on one action. Entropy bonus can&rsquo;t recover. Fix: label smoothing (0.1), fewer epochs.</p>
+        </div>
+        <div class="bug-card">
+          <h4>3. Infinite Games</h4>
+          <p>Degenerate policy never closes all 7 targets. Trajectory buffer grows to 4.4GB. Fix: 100-turn maximum per game.</p>
+        </div>
+        <div class="bug-card">
+          <h4>4. Masking Mismatch</h4>
+          <p>Bull-triple masking applied during action selection but not during gradient computation. Distribution mismatch corrupts training. Fix: consistent masking in both paths.</p>
+        </div>
+        <div class="bug-card">
+          <h4>5. Self-Play Collapse</h4>
+          <p>Both players updating simultaneously chase each other into degenerate strategies. Fix: freeze Player 2, train only Player 1.</p>
+        </div>
+        <div class="bug-card">
+          <h4>6. Reward Hacking</h4>
+          <p>Intermediate rewards for closing targets cause the agent to loop on 20-triple forever. Fix: remove all intermediate rewards entirely.</p>
+        </div>
+        <div class="bug-card">
+          <h4>7. Entropy Annealing Bug</h4>
+          <p>Constructor passes custom initial entropy, but annealing function hardcodes the default. Fix: store per-instance initial value.</p>
+        </div>
+        <div class="bug-card">
+          <h4>8. Dead-Target Blindness</h4>
+          <p>Without masking, the network can&rsquo;t learn to avoid closed targets from terminal rewards alone &mdash; the signal is too diluted across 60 darts. Fix: dead-target action masking.</p>
+        </div>
+        <div class="bug-card">
+          <h4>9. Double-Counted Rewards</h4>
+          <p>Win reward applied during gameplay AND at game end = +200 instead of +100. Fix: compute_reward() always returns 0; terminal rewards applied exclusively at game end.</p>
+        </div>
+        <div class="bug-card">
+          <h4>10. Deterministic Games</h4>
+          <p>With miss_enabled=False, every triple lands. First player always wins by one turn. <strong>All v4&ndash;v8 results were invalidated.</strong> Fix: enable realistic miss probabilities.</p>
+        </div>
+        <div class="bug-card">
+          <h4>11. Easy Bot Pollution</h4>
+          <p>Easy opponents drown out hard-opponent learning signals. Agent converges to S1 behavior (43% vs hard bots). Fix: prune to hard-only bot pool.</p>
+        </div>
+        <div class="bug-card">
+          <h4>12. Overtraining</h4>
+          <p>Entropy floor too low (0.005). Policy becomes deterministic, loses adaptability. Win rate declines 3% past 4.4M games. Fix: entropy floor 0.01.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Version Timeline -->
+    <section class="section" id="timeline">
+      <h2 class="section-title">Version History</h2>
+
+      <div class="version-timeline">
+        <div class="version-entry version-failure">
+          <div class="version-label">v1&ndash;v3 &middot; Tabular Q-Learning</div>
+          <p>
+            Bellman updates on a state-action lookup table. Plateaus at ~45% WR against basic bots.
+            State space too large for tabular methods.
+          </p>
+        </div>
+
+        <div class="version-entry version-failure">
+          <div class="version-label">v4&ndash;v8 &middot; Deep Q-Network</div>
+          <p>
+            Double DQN with experience replay. Fails at ~45% WR. Flat action space prevents structured
+            learning. Results later invalidated &mdash; deterministic game mechanics (Bug 10) made
+            first-mover always win.
+          </p>
+        </div>
+
+        <div class="version-entry">
+          <div class="version-label">v9&ndash;v15 &middot; A2C Development</div>
+          <p>
+            Branching architecture implemented. Bugs 1&ndash;10 discovered and fixed iteratively.
+            Supervised pre-training pipeline built. Agent begins learning meaningful strategies
+            but can&rsquo;t break past 50%.
+          </p>
+        </div>
+
+        <div class="version-entry version-failure">
+          <div class="version-label">v16 &middot; First Full Run (All 28 Bots)</div>
+          <p>
+            First end-to-end A2C training. 48.5% overall WR, but only <strong>43% against hard bots</strong> &mdash;
+            worse than the trivial S1 strategy. Easy opponents poison the learning signal.
+          </p>
+        </div>
+
+        <div class="version-entry version-breakthrough">
+          <div class="version-label">v17 &middot; Hard Bots Only (THE BREAKTHROUGH)</div>
+          <p>
+            Pruned to 13 hard bots. WR climbs 5% &rarr; <strong>55%</strong> over 2M games.
+            <strong>Novel 20/18 turn-order-dependent opening discovered.</strong>
+            But overtraining begins after 4.4M games (entropy floor too low).
+          </p>
+        </div>
+
+        <div class="version-entry">
+          <div class="version-label">v18 &middot; Progressive Pruning</div>
+          <p>
+            Removed S4 (62% WR) and S8 (66% WR) as the agent began farming them. 11 remaining
+            bots all in the 47&ndash;57% range. WR stabilizes at ~50% with tighter competition.
+          </p>
+        </div>
+
+        <div class="version-entry version-breakthrough">
+          <div class="version-label">v19 &middot; Entropy Floor (STABILITY)</div>
+          <p>
+            Entropy floor raised to 0.01. <strong>49.3% WR with zero decline</strong> over 2M games.
+            Agent maintains adaptability indefinitely. Final stable model.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Final Results -->
+    <section class="section" id="results">
+      <h2 class="section-title">Final Results</h2>
+      <p>
+        The v19 agent plays at pro skill level (MPR ~5.3) against the 11 hardest hand-crafted bots.
+        Its 49.3% average win rate means it holds its own against a curated field where every opponent
+        is a strong strategy &mdash; not a single easy win in the pool.
+      </p>
+
+      <table class="strategy-comparison">
+        <thead>
+          <tr>
+            <th>Opponent</th>
+            <th>Win Rate</th>
+            <th>Notes</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>E11 (Kitchen Sink)</td>
+            <td>53.2%</td>
+            <td>Best matchup &mdash; complexity works against E11</td>
+          </tr>
+          <tr>
+            <td>S6 (Lead + Extra Darts)</td>
+            <td>52.1%</td>
+            <td>Extra darts disrupt S6&rsquo;s closing tempo</td>
+          </tr>
+          <tr>
+            <td>S16 (Chase + Extra + High Thresh.)</td>
+            <td>50.3%</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>S14 (Chase + Extra + Low Thresh.)</td>
+            <td>50.2%</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>E9 (Phase Shift &mdash; 3 phases)</td>
+            <td>49.2%</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>S10 (Chase + Low Thresh.)</td>
+            <td>49.0%</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>E5 (Smart Aim)</td>
+            <td>48.3%</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>E1 (Early Bull)</td>
+            <td>48.3%</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>E3 (Greedy Close-and-Score)</td>
+            <td>44.9%</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>E10 (Score Surge)</td>
+            <td>44.8%</td>
+            <td></td>
+          </tr>
+          <tr class="highlight-row">
+            <td>S2 (Score Then Cover)</td>
+            <td>42.9%</td>
+            <td>Toughest opponent &mdash; S2&rsquo;s sophisticated covering logic</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <p class="text-small text-muted">
+        All games played at pro skill level with realistic miss probabilities. Win rates measured
+        over 2 million games with entropy floor 0.01.
+      </p>
+    </section>
+
+    <!-- What It Means -->
+    <section class="section" id="significance">
+      <h2 class="section-title">What It Means</h2>
+
+      <h3>Independent Confirmation of Frongello</h3>
+      <p>
+        The agent rediscovered several Frongello principles without being told them. It learned to
+        score before covering (76% closing early, shifting to 69&ndash;72% scoring once foundations are
+        built). It learned not to chase (31% chase rate when threatened). These principles emerged
+        from pure win/loss feedback &mdash; strong independent confirmation that they reflect genuine
+        strategic truth, not just human intuition.
+      </p>
+
+      <h3>Something Genuinely New</h3>
+      <p>
+        The turn-order-dependent opening is not a refinement of existing strategy. It&rsquo;s a wholly
+        new dimension of play that no hand-crafted strategy explores. All 28 bots in the tournament
+        play identically regardless of who goes first. The agent discovered that this context matters
+        &mdash; and adapted accordingly.
+      </p>
+
+      <h3>The Limits of Hand-Crafted Rules</h3>
+      <p>
+        Hand-crafted strategies parameterize <em>three</em> dimensions: threshold, extra darts, and chase.
+        The agent found value in a <em>fourth</em> dimension &mdash; turn order &mdash; that wasn&rsquo;t
+        part of the original parameter space at all. This suggests there may be other unconsidered
+        dimensions (opponent modeling, dart-within-turn sequencing, adaptive threshold adjustment)
+        that further human-designed strategies haven&rsquo;t explored.
+      </p>
+
+      <h3>Training Insight: Curriculum Matters More Than Architecture</h3>
+      <p>
+        The single most impactful change across all 19 versions wasn&rsquo;t the network architecture,
+        the reward function, or the learning rate. It was <strong>removing easy opponents from the
+        training pool.</strong> When every game produces useful signal, the agent learns. When easy
+        wins dilute hard losses, it doesn&rsquo;t. This principle &mdash; that opponent curriculum
+        is the dominant training variable &mdash; likely generalizes to other game-playing RL systems.
+      </p>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <p>Based on Frongello (2018), "Optimal Strategy in Darts Cricket." Simulation code and data available on GitHub.</p>
+    </div>
+  </footer>
+
+  <script src="js/main.js"></script>
+</body>
+</html>

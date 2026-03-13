@@ -1,0 +1,1544 @@
+{
+  "metadata": {
+    "total_tournaments": 1936,
+    "total_simulated_games": 18740480000,
+    "games_per_matchup": 20000,
+    "strategies": [
+      "S1",
+      "S2",
+      "S3",
+      "S4",
+      "S5",
+      "S6",
+      "S7",
+      "S8",
+      "S9",
+      "S10",
+      "S11",
+      "S12",
+      "S13",
+      "S14",
+      "S15",
+      "S16",
+      "S17",
+      "E1",
+      "E2",
+      "E3",
+      "E4",
+      "PS"
+    ],
+    "mpr_levels": [
+      0.8,
+      1.0,
+      1.2,
+      1.5,
+      2.0,
+      2.5,
+      3.0,
+      3.6,
+      4.0,
+      4.9,
+      5.6
+    ],
+    "bull_multipliers": [
+      0.25,
+      0.5,
+      0.75,
+      1.0
+    ],
+    "asymmetric_conditions": 12
+  },
+  "key_insights": [
+    {
+      "category": "bull_impact",
+      "finding": "Each +0.25 step in bull accuracy advantage shifts win rate by approximately 8.0 percentage points",
+      "confidence": "high",
+      "r_squared": 0.7346
+    },
+    {
+      "category": "exchange_rate",
+      "finding": "Each +0.25 bull accuracy step is worth approximately 0.11 MPR in skill equivalence",
+      "confidence": "moderate"
+    },
+    {
+      "category": "robust_strategies",
+      "finding": "Most robust strategies across all bull conditions: S2, S3, S10",
+      "confidence": "high"
+    },
+    {
+      "category": "interaction",
+      "finding": "Bull advantage increases with MPR (r=0.592)",
+      "significant": "True",
+      "p_value": 0.0
+    },
+    {
+      "category": "strategy_independence",
+      "finding": "Best strategy DOES significantly depend on bull condition (chi2=246.32, p=1.9049e-12)",
+      "significant": "True"
+    },
+    {
+      "category": "first_player",
+      "finding": "Baseline first-player advantage is 50.0% (pure positional). Asymmetric bull can amplify or reduce this.",
+      "baseline_pct": 50.0
+    }
+  ],
+  "analyses": {
+    "asymmetric_impact": {
+      "description": "Win rate shifts when bull skill is asymmetric",
+      "matchups": [],
+      "summary": {},
+      "pair_summaries": [
+        {
+          "p1_bull": 0.25,
+          "p2_bull": 0.5,
+          "bull_gap": -0.25,
+          "avg_p1_best_wr": 48.14,
+          "avg_mirror_best_wr": 56.94,
+          "delta_pct": -8.8,
+          "n_matchups": 11
+        },
+        {
+          "p1_bull": 0.25,
+          "p2_bull": 0.75,
+          "bull_gap": -0.5,
+          "avg_p1_best_wr": 44.59,
+          "avg_mirror_best_wr": 61.16,
+          "delta_pct": -16.57,
+          "n_matchups": 11
+        },
+        {
+          "p1_bull": 0.25,
+          "p2_bull": 1.0,
+          "bull_gap": -0.75,
+          "avg_p1_best_wr": 41.49,
+          "avg_mirror_best_wr": 65.06,
+          "delta_pct": -23.57,
+          "n_matchups": 11
+        },
+        {
+          "p1_bull": 0.5,
+          "p2_bull": 0.75,
+          "bull_gap": -0.25,
+          "avg_p1_best_wr": 49.54,
+          "avg_mirror_best_wr": 57.26,
+          "delta_pct": -7.73,
+          "n_matchups": 11
+        },
+        {
+          "p1_bull": 0.5,
+          "p2_bull": 1.0,
+          "bull_gap": -0.5,
+          "avg_p1_best_wr": 46.0,
+          "avg_mirror_best_wr": 60.55,
+          "delta_pct": -14.55,
+          "n_matchups": 11
+        },
+        {
+          "p1_bull": 0.75,
+          "p2_bull": 1.0,
+          "bull_gap": -0.25,
+          "avg_p1_best_wr": 49.93,
+          "avg_mirror_best_wr": 57.6,
+          "delta_pct": -7.67,
+          "n_matchups": 11
+        }
+      ],
+      "regression": {
+        "slope_per_unit_bull": 32.001,
+        "intercept": 0.17,
+        "r_squared": 0.7346,
+        "p_value": 4.24e-20,
+        "interpretation": "Each +0.25 bull step is worth ~8.0% win rate"
+      },
+      "bull_advantage_by_mpr": {
+        "0.8": 7.86,
+        "1.0": 7.32,
+        "1.2": 6.93,
+        "1.5": 6.62,
+        "2.0": 6.49,
+        "2.5": 6.57,
+        "3.0": 6.78,
+        "3.6": 7.14,
+        "4.0": 7.44,
+        "4.9": 8.52,
+        "5.6": 10.4
+      }
+    },
+    "strategy_shifts": {
+      "description": "How optimal strategies change with bull accuracy",
+      "by_own_bull": {
+        "0.25": [
+          {
+            "strategy": "S10",
+            "count": 21,
+            "pct": 63.6
+          },
+          {
+            "strategy": "S2",
+            "count": 4,
+            "pct": 12.1
+          },
+          {
+            "strategy": "S9",
+            "count": 3,
+            "pct": 9.1
+          },
+          {
+            "strategy": "E2",
+            "count": 3,
+            "pct": 9.1
+          },
+          {
+            "strategy": "PS",
+            "count": 2,
+            "pct": 6.1
+          }
+        ],
+        "0.5": [
+          {
+            "strategy": "S10",
+            "count": 11,
+            "pct": 33.3
+          },
+          {
+            "strategy": "S2",
+            "count": 10,
+            "pct": 30.3
+          },
+          {
+            "strategy": "PS",
+            "count": 7,
+            "pct": 21.2
+          },
+          {
+            "strategy": "E2",
+            "count": 3,
+            "pct": 9.1
+          },
+          {
+            "strategy": "S12",
+            "count": 1,
+            "pct": 3.0
+          }
+        ],
+        "0.75": [
+          {
+            "strategy": "S2",
+            "count": 14,
+            "pct": 42.4
+          },
+          {
+            "strategy": "E2",
+            "count": 8,
+            "pct": 24.2
+          },
+          {
+            "strategy": "PS",
+            "count": 7,
+            "pct": 21.2
+          },
+          {
+            "strategy": "S10",
+            "count": 3,
+            "pct": 9.1
+          },
+          {
+            "strategy": "E4",
+            "count": 1,
+            "pct": 3.0
+          }
+        ],
+        "1.0": [
+          {
+            "strategy": "E1",
+            "count": 16,
+            "pct": 48.5
+          },
+          {
+            "strategy": "PS",
+            "count": 6,
+            "pct": 18.2
+          },
+          {
+            "strategy": "S6",
+            "count": 5,
+            "pct": 15.2
+          },
+          {
+            "strategy": "S10",
+            "count": 2,
+            "pct": 6.1
+          },
+          {
+            "strategy": "E2",
+            "count": 2,
+            "pct": 6.1
+          }
+        ]
+      },
+      "by_opponent_bull": {
+        "0.25": [
+          {
+            "strategy": "S2",
+            "count": 12,
+            "pct": 36.4
+          },
+          {
+            "strategy": "PS",
+            "count": 6,
+            "pct": 18.2
+          },
+          {
+            "strategy": "E2",
+            "count": 6,
+            "pct": 18.2
+          },
+          {
+            "strategy": "S6",
+            "count": 4,
+            "pct": 12.1
+          },
+          {
+            "strategy": "S10",
+            "count": 3,
+            "pct": 9.1
+          }
+        ],
+        "0.5": [
+          {
+            "strategy": "S2",
+            "count": 9,
+            "pct": 27.3
+          },
+          {
+            "strategy": "E1",
+            "count": 7,
+            "pct": 21.2
+          },
+          {
+            "strategy": "S10",
+            "count": 6,
+            "pct": 18.2
+          },
+          {
+            "strategy": "E2",
+            "count": 4,
+            "pct": 12.1
+          },
+          {
+            "strategy": "PS",
+            "count": 4,
+            "pct": 12.1
+          }
+        ],
+        "0.75": [
+          {
+            "strategy": "S10",
+            "count": 11,
+            "pct": 33.3
+          },
+          {
+            "strategy": "E1",
+            "count": 8,
+            "pct": 24.2
+          },
+          {
+            "strategy": "S2",
+            "count": 5,
+            "pct": 15.2
+          },
+          {
+            "strategy": "PS",
+            "count": 5,
+            "pct": 15.2
+          },
+          {
+            "strategy": "E2",
+            "count": 2,
+            "pct": 6.1
+          }
+        ],
+        "1.0": [
+          {
+            "strategy": "S10",
+            "count": 17,
+            "pct": 51.5
+          },
+          {
+            "strategy": "PS",
+            "count": 7,
+            "pct": 21.2
+          },
+          {
+            "strategy": "E2",
+            "count": 4,
+            "pct": 12.1
+          },
+          {
+            "strategy": "S2",
+            "count": 3,
+            "pct": 9.1
+          },
+          {
+            "strategy": "S1",
+            "count": 1,
+            "pct": 3.0
+          }
+        ]
+      },
+      "case_studies": [
+        {
+          "p1_bull": 0.25,
+          "p2_bull": 0.5,
+          "mpr": 3.0,
+          "best_strategy": "S2",
+          "best_wr": 47.9,
+          "top3": [
+            {
+              "strategy": "S2",
+              "wr": 47.9
+            },
+            {
+              "strategy": "E2",
+              "wr": 47.9
+            },
+            {
+              "strategy": "S10",
+              "wr": 47.8
+            }
+          ]
+        },
+        {
+          "p1_bull": 0.25,
+          "p2_bull": 0.75,
+          "mpr": 3.0,
+          "best_strategy": "S10",
+          "best_wr": 44.5,
+          "top3": [
+            {
+              "strategy": "S10",
+              "wr": 44.5
+            },
+            {
+              "strategy": "E2",
+              "wr": 44.3
+            },
+            {
+              "strategy": "S2",
+              "wr": 44.2
+            }
+          ]
+        },
+        {
+          "p1_bull": 0.25,
+          "p2_bull": 1.0,
+          "mpr": 3.0,
+          "best_strategy": "S10",
+          "best_wr": 41.7,
+          "top3": [
+            {
+              "strategy": "S10",
+              "wr": 41.7
+            },
+            {
+              "strategy": "S2",
+              "wr": 40.9
+            },
+            {
+              "strategy": "E2",
+              "wr": 40.9
+            }
+          ]
+        },
+        {
+          "p1_bull": 0.5,
+          "p2_bull": 0.25,
+          "mpr": 3.0,
+          "best_strategy": "E2",
+          "best_wr": 56.3,
+          "top3": [
+            {
+              "strategy": "E2",
+              "wr": 56.3
+            },
+            {
+              "strategy": "S2",
+              "wr": 56.2
+            },
+            {
+              "strategy": "E4",
+              "wr": 55.6
+            }
+          ]
+        },
+        {
+          "p1_bull": 0.5,
+          "p2_bull": 0.75,
+          "mpr": 3.0,
+          "best_strategy": "S2",
+          "best_wr": 48.8,
+          "top3": [
+            {
+              "strategy": "S2",
+              "wr": 48.8
+            },
+            {
+              "strategy": "E2",
+              "wr": 48.6
+            },
+            {
+              "strategy": "S10",
+              "wr": 48.3
+            }
+          ]
+        },
+        {
+          "p1_bull": 0.5,
+          "p2_bull": 1.0,
+          "mpr": 3.0,
+          "best_strategy": "S10",
+          "best_wr": 45.7,
+          "top3": [
+            {
+              "strategy": "S10",
+              "wr": 45.7
+            },
+            {
+              "strategy": "E2",
+              "wr": 45.5
+            },
+            {
+              "strategy": "S2",
+              "wr": 45.4
+            }
+          ]
+        },
+        {
+          "p1_bull": 0.75,
+          "p2_bull": 0.25,
+          "mpr": 3.0,
+          "best_strategy": "E2",
+          "best_wr": 60.5,
+          "top3": [
+            {
+              "strategy": "E2",
+              "wr": 60.5
+            },
+            {
+              "strategy": "S2",
+              "wr": 60.3
+            },
+            {
+              "strategy": "S6",
+              "wr": 59.9
+            }
+          ]
+        },
+        {
+          "p1_bull": 0.75,
+          "p2_bull": 0.5,
+          "mpr": 3.0,
+          "best_strategy": "S2",
+          "best_wr": 56.4,
+          "top3": [
+            {
+              "strategy": "S2",
+              "wr": 56.4
+            },
+            {
+              "strategy": "E2",
+              "wr": 56.3
+            },
+            {
+              "strategy": "E4",
+              "wr": 55.5
+            }
+          ]
+        },
+        {
+          "p1_bull": 0.75,
+          "p2_bull": 1.0,
+          "mpr": 3.0,
+          "best_strategy": "S2",
+          "best_wr": 49.5,
+          "top3": [
+            {
+              "strategy": "S2",
+              "wr": 49.5
+            },
+            {
+              "strategy": "E2",
+              "wr": 49.4
+            },
+            {
+              "strategy": "PS",
+              "wr": 48.8
+            }
+          ]
+        },
+        {
+          "p1_bull": 1.0,
+          "p2_bull": 0.25,
+          "mpr": 3.0,
+          "best_strategy": "S6",
+          "best_wr": 64.6,
+          "top3": [
+            {
+              "strategy": "S6",
+              "wr": 64.6
+            },
+            {
+              "strategy": "S2",
+              "wr": 63.8
+            },
+            {
+              "strategy": "E1",
+              "wr": 63.8
+            }
+          ]
+        },
+        {
+          "p1_bull": 1.0,
+          "p2_bull": 0.5,
+          "mpr": 3.0,
+          "best_strategy": "E1",
+          "best_wr": 60.3,
+          "top3": [
+            {
+              "strategy": "E1",
+              "wr": 60.3
+            },
+            {
+              "strategy": "S2",
+              "wr": 59.8
+            },
+            {
+              "strategy": "S6",
+              "wr": 59.7
+            }
+          ]
+        },
+        {
+          "p1_bull": 1.0,
+          "p2_bull": 0.75,
+          "mpr": 3.0,
+          "best_strategy": "E1",
+          "best_wr": 57.6,
+          "top3": [
+            {
+              "strategy": "E1",
+              "wr": 57.6
+            },
+            {
+              "strategy": "E2",
+              "wr": 56.2
+            },
+            {
+              "strategy": "S2",
+              "wr": 56.1
+            }
+          ]
+        }
+      ]
+    },
+    "mpr_bull_tradeoff": {
+      "description": "How much MPR is one step of bull accuracy worth?",
+      "exchange_rates": [
+        {
+          "bull_gap": 0.25,
+          "avg_mpr_compensated": 0.13,
+          "std": 0.03,
+          "n": 5
+        },
+        {
+          "bull_gap": 0.5,
+          "avg_mpr_compensated": 0.2,
+          "std": 0.05,
+          "n": 10
+        },
+        {
+          "bull_gap": 0.75,
+          "avg_mpr_compensated": 0.28,
+          "std": 0.08,
+          "n": 5
+        }
+      ],
+      "detailed_comparisons": [
+        {
+          "better_bull": 1.0,
+          "worse_bull": 0.25,
+          "bull_gap": 0.75,
+          "p2_mpr": 2.0,
+          "crossover_mpr": 1.82,
+          "mpr_compensated": 0.18
+        },
+        {
+          "better_bull": 1.0,
+          "worse_bull": 0.25,
+          "bull_gap": 0.75,
+          "p2_mpr": 2.5,
+          "crossover_mpr": 2.28,
+          "mpr_compensated": 0.22
+        },
+        {
+          "better_bull": 1.0,
+          "worse_bull": 0.25,
+          "bull_gap": 0.75,
+          "p2_mpr": 3.0,
+          "crossover_mpr": 2.73,
+          "mpr_compensated": 0.27
+        },
+        {
+          "better_bull": 1.0,
+          "worse_bull": 0.25,
+          "bull_gap": 0.75,
+          "p2_mpr": 3.6,
+          "crossover_mpr": 3.26,
+          "mpr_compensated": 0.34
+        },
+        {
+          "better_bull": 1.0,
+          "worse_bull": 0.25,
+          "bull_gap": 0.75,
+          "p2_mpr": 4.0,
+          "crossover_mpr": 3.6,
+          "mpr_compensated": 0.4
+        },
+        {
+          "better_bull": 0.75,
+          "worse_bull": 0.25,
+          "bull_gap": 0.5,
+          "p2_mpr": 2.0,
+          "crossover_mpr": 1.86,
+          "mpr_compensated": 0.14
+        },
+        {
+          "better_bull": 0.75,
+          "worse_bull": 0.25,
+          "bull_gap": 0.5,
+          "p2_mpr": 2.5,
+          "crossover_mpr": 2.33,
+          "mpr_compensated": 0.17
+        },
+        {
+          "better_bull": 0.75,
+          "worse_bull": 0.25,
+          "bull_gap": 0.5,
+          "p2_mpr": 3.0,
+          "crossover_mpr": 2.8,
+          "mpr_compensated": 0.2
+        },
+        {
+          "better_bull": 0.75,
+          "worse_bull": 0.25,
+          "bull_gap": 0.5,
+          "p2_mpr": 3.6,
+          "crossover_mpr": 3.34,
+          "mpr_compensated": 0.26
+        },
+        {
+          "better_bull": 0.75,
+          "worse_bull": 0.25,
+          "bull_gap": 0.5,
+          "p2_mpr": 4.0,
+          "crossover_mpr": 3.69,
+          "mpr_compensated": 0.31
+        },
+        {
+          "better_bull": 1.0,
+          "worse_bull": 0.5,
+          "bull_gap": 0.5,
+          "p2_mpr": 2.0,
+          "crossover_mpr": 1.86,
+          "mpr_compensated": 0.14
+        },
+        {
+          "better_bull": 1.0,
+          "worse_bull": 0.5,
+          "bull_gap": 0.5,
+          "p2_mpr": 2.5,
+          "crossover_mpr": 2.34,
+          "mpr_compensated": 0.16
+        },
+        {
+          "better_bull": 1.0,
+          "worse_bull": 0.5,
+          "bull_gap": 0.5,
+          "p2_mpr": 3.0,
+          "crossover_mpr": 2.81,
+          "mpr_compensated": 0.19
+        },
+        {
+          "better_bull": 1.0,
+          "worse_bull": 0.5,
+          "bull_gap": 0.5,
+          "p2_mpr": 3.6,
+          "crossover_mpr": 3.38,
+          "mpr_compensated": 0.23
+        },
+        {
+          "better_bull": 1.0,
+          "worse_bull": 0.5,
+          "bull_gap": 0.5,
+          "p2_mpr": 4.0,
+          "crossover_mpr": 3.76,
+          "mpr_compensated": 0.24
+        },
+        {
+          "better_bull": 0.75,
+          "worse_bull": 0.5,
+          "bull_gap": 0.25,
+          "p2_mpr": 2.0,
+          "crossover_mpr": 1.91,
+          "mpr_compensated": 0.09
+        },
+        {
+          "better_bull": 0.75,
+          "worse_bull": 0.5,
+          "bull_gap": 0.25,
+          "p2_mpr": 2.5,
+          "crossover_mpr": 2.39,
+          "mpr_compensated": 0.11
+        },
+        {
+          "better_bull": 0.75,
+          "worse_bull": 0.5,
+          "bull_gap": 0.25,
+          "p2_mpr": 3.0,
+          "crossover_mpr": 2.87,
+          "mpr_compensated": 0.13
+        },
+        {
+          "better_bull": 0.75,
+          "worse_bull": 0.5,
+          "bull_gap": 0.25,
+          "p2_mpr": 3.6,
+          "crossover_mpr": 3.45,
+          "mpr_compensated": 0.15
+        },
+        {
+          "better_bull": 0.75,
+          "worse_bull": 0.5,
+          "bull_gap": 0.25,
+          "p2_mpr": 4.0,
+          "crossover_mpr": 3.84,
+          "mpr_compensated": 0.16
+        }
+      ],
+      "overall_exchange_rate_per_025_bull": 0.107
+    },
+    "dominant_strategies": {
+      "description": "Which strategies are robust vs condition-specific?",
+      "robustness_rankings": [
+        {
+          "strategy": "S2",
+          "avg_rank": 3.62,
+          "median_rank": 3.0,
+          "times_first": 116,
+          "times_top3": 1175,
+          "std_rank": 2.21,
+          "n": 1936
+        },
+        {
+          "strategy": "S3",
+          "avg_rank": 8.03,
+          "median_rank": 8.0,
+          "times_first": 10,
+          "times_top3": 575,
+          "std_rank": 4.45,
+          "n": 1936
+        },
+        {
+          "strategy": "S10",
+          "avg_rank": 8.18,
+          "median_rank": 10.0,
+          "times_first": 170,
+          "times_top3": 618,
+          "std_rank": 5.37,
+          "n": 1936
+        },
+        {
+          "strategy": "S1",
+          "avg_rank": 8.7,
+          "median_rank": 2.0,
+          "times_first": 909,
+          "times_top3": 1047,
+          "std_rank": 9.02,
+          "n": 1936
+        },
+        {
+          "strategy": "S11",
+          "avg_rank": 9.59,
+          "median_rank": 11.0,
+          "times_first": 0,
+          "times_top3": 226,
+          "std_rank": 4.3,
+          "n": 1936
+        },
+        {
+          "strategy": "E2",
+          "avg_rank": 9.64,
+          "median_rank": 7.0,
+          "times_first": 53,
+          "times_top3": 326,
+          "std_rank": 6.59,
+          "n": 1936
+        },
+        {
+          "strategy": "S6",
+          "avg_rank": 9.84,
+          "median_rank": 6.0,
+          "times_first": 405,
+          "times_top3": 467,
+          "std_rank": 7.58,
+          "n": 1936
+        },
+        {
+          "strategy": "S4",
+          "avg_rank": 10.11,
+          "median_rank": 10.0,
+          "times_first": 1,
+          "times_top3": 58,
+          "std_rank": 5.15,
+          "n": 1936
+        },
+        {
+          "strategy": "S5",
+          "avg_rank": 11.08,
+          "median_rank": 11.0,
+          "times_first": 2,
+          "times_top3": 13,
+          "std_rank": 5.33,
+          "n": 1936
+        },
+        {
+          "strategy": "S7",
+          "avg_rank": 11.22,
+          "median_rank": 7.0,
+          "times_first": 0,
+          "times_top3": 416,
+          "std_rank": 7.39,
+          "n": 1936
+        },
+        {
+          "strategy": "S12",
+          "avg_rank": 11.65,
+          "median_rank": 12.0,
+          "times_first": 4,
+          "times_top3": 13,
+          "std_rank": 3.79,
+          "n": 1936
+        },
+        {
+          "strategy": "S8",
+          "avg_rank": 11.72,
+          "median_rank": 8.0,
+          "times_first": 2,
+          "times_top3": 322,
+          "std_rank": 7.01,
+          "n": 1936
+        },
+        {
+          "strategy": "S14",
+          "avg_rank": 12.2,
+          "median_rank": 14.0,
+          "times_first": 3,
+          "times_top3": 24,
+          "std_rank": 4.24,
+          "n": 1936
+        },
+        {
+          "strategy": "S9",
+          "avg_rank": 12.27,
+          "median_rank": 9.0,
+          "times_first": 86,
+          "times_top3": 125,
+          "std_rank": 7.0,
+          "n": 1936
+        },
+        {
+          "strategy": "E4",
+          "avg_rank": 12.67,
+          "median_rank": 11.0,
+          "times_first": 1,
+          "times_top3": 36,
+          "std_rank": 6.18,
+          "n": 1936
+        },
+        {
+          "strategy": "S13",
+          "avg_rank": 13.39,
+          "median_rank": 13.0,
+          "times_first": 4,
+          "times_top3": 15,
+          "std_rank": 3.61,
+          "n": 1936
+        },
+        {
+          "strategy": "S15",
+          "avg_rank": 13.94,
+          "median_rank": 15.0,
+          "times_first": 1,
+          "times_top3": 17,
+          "std_rank": 3.84,
+          "n": 1936
+        },
+        {
+          "strategy": "E3",
+          "avg_rank": 14.12,
+          "median_rank": 15.0,
+          "times_first": 1,
+          "times_top3": 26,
+          "std_rank": 5.9,
+          "n": 1936
+        },
+        {
+          "strategy": "PS",
+          "avg_rank": 14.23,
+          "median_rank": 14.0,
+          "times_first": 103,
+          "times_top3": 165,
+          "std_rank": 6.58,
+          "n": 1936
+        },
+        {
+          "strategy": "S16",
+          "avg_rank": 15.26,
+          "median_rank": 16.0,
+          "times_first": 1,
+          "times_top3": 8,
+          "std_rank": 3.62,
+          "n": 1936
+        },
+        {
+          "strategy": "E1",
+          "avg_rank": 15.33,
+          "median_rank": 18.0,
+          "times_first": 62,
+          "times_top3": 127,
+          "std_rank": 6.23,
+          "n": 1936
+        },
+        {
+          "strategy": "S17",
+          "avg_rank": 16.2,
+          "median_rank": 17.0,
+          "times_first": 2,
+          "times_top3": 9,
+          "std_rank": 3.57,
+          "n": 1936
+        }
+      ],
+      "condition_specific": [
+        {
+          "strategy": "S1",
+          "times_best": 1,
+          "avg_own_bull_when_best": 0.5,
+          "avg_opp_bull_when_best": 1.0,
+          "mpr_range_when_best": [
+            1.0,
+            1.0
+          ]
+        },
+        {
+          "strategy": "S2",
+          "times_best": 29,
+          "avg_own_bull_when_best": 0.603,
+          "avg_opp_bull_when_best": 0.491,
+          "mpr_range_when_best": [
+            1.0,
+            4.9
+          ]
+        },
+        {
+          "strategy": "S6",
+          "times_best": 5,
+          "avg_own_bull_when_best": 1.0,
+          "avg_opp_bull_when_best": 0.3,
+          "mpr_range_when_best": [
+            2.5,
+            4.0
+          ]
+        },
+        {
+          "strategy": "S9",
+          "times_best": 3,
+          "avg_own_bull_when_best": 0.25,
+          "avg_opp_bull_when_best": 0.583,
+          "mpr_range_when_best": [
+            4.9,
+            5.6
+          ]
+        },
+        {
+          "strategy": "S10",
+          "times_best": 37,
+          "avg_own_bull_when_best": 0.405,
+          "avg_opp_bull_when_best": 0.784,
+          "mpr_range_when_best": [
+            0.8,
+            4.0
+          ]
+        },
+        {
+          "strategy": "S12",
+          "times_best": 1,
+          "avg_own_bull_when_best": 0.5,
+          "avg_opp_bull_when_best": 0.75,
+          "mpr_range_when_best": [
+            1.0,
+            1.0
+          ]
+        },
+        {
+          "strategy": "E1",
+          "times_best": 16,
+          "avg_own_bull_when_best": 1.0,
+          "avg_opp_bull_when_best": 0.609,
+          "mpr_range_when_best": [
+            0.8,
+            4.0
+          ]
+        },
+        {
+          "strategy": "E2",
+          "times_best": 16,
+          "avg_own_bull_when_best": 0.641,
+          "avg_opp_bull_when_best": 0.562,
+          "mpr_range_when_best": [
+            1.0,
+            4.0
+          ]
+        },
+        {
+          "strategy": "E3",
+          "times_best": 1,
+          "avg_own_bull_when_best": 1.0,
+          "avg_opp_bull_when_best": 0.25,
+          "mpr_range_when_best": [
+            1.0,
+            1.0
+          ]
+        },
+        {
+          "strategy": "E4",
+          "times_best": 1,
+          "avg_own_bull_when_best": 0.75,
+          "avg_opp_bull_when_best": 1.0,
+          "mpr_range_when_best": [
+            1.0,
+            1.0
+          ]
+        },
+        {
+          "strategy": "PS",
+          "times_best": 22,
+          "avg_own_bull_when_best": 0.693,
+          "avg_opp_bull_when_best": 0.648,
+          "mpr_range_when_best": [
+            4.0,
+            5.6
+          ]
+        }
+      ]
+    },
+    "statistical_significance": {
+      "description": "Confidence intervals and hypothesis tests",
+      "ci_examples": [
+        {
+          "p1_bull": 0.25,
+          "p2_bull": 0.5,
+          "strategy": "S2",
+          "wr": 47.9,
+          "ci_95": [
+            47.21,
+            48.59
+          ]
+        },
+        {
+          "p1_bull": 0.25,
+          "p2_bull": 0.75,
+          "strategy": "S10",
+          "wr": 44.5,
+          "ci_95": [
+            43.81,
+            45.19
+          ]
+        },
+        {
+          "p1_bull": 0.25,
+          "p2_bull": 1.0,
+          "strategy": "S10",
+          "wr": 41.7,
+          "ci_95": [
+            41.02,
+            42.38
+          ]
+        },
+        {
+          "p1_bull": 0.5,
+          "p2_bull": 0.25,
+          "strategy": "E2",
+          "wr": 56.3,
+          "ci_95": [
+            55.61,
+            56.99
+          ]
+        },
+        {
+          "p1_bull": 0.5,
+          "p2_bull": 0.75,
+          "strategy": "S2",
+          "wr": 48.8,
+          "ci_95": [
+            48.11,
+            49.49
+          ]
+        },
+        {
+          "p1_bull": 0.5,
+          "p2_bull": 1.0,
+          "strategy": "S10",
+          "wr": 45.7,
+          "ci_95": [
+            45.01,
+            46.39
+          ]
+        },
+        {
+          "p1_bull": 0.75,
+          "p2_bull": 0.25,
+          "strategy": "E2",
+          "wr": 60.5,
+          "ci_95": [
+            59.82,
+            61.18
+          ]
+        },
+        {
+          "p1_bull": 0.75,
+          "p2_bull": 0.5,
+          "strategy": "S2",
+          "wr": 56.4,
+          "ci_95": [
+            55.71,
+            57.09
+          ]
+        },
+        {
+          "p1_bull": 0.75,
+          "p2_bull": 1.0,
+          "strategy": "S2",
+          "wr": 49.5,
+          "ci_95": [
+            48.81,
+            50.19
+          ]
+        },
+        {
+          "p1_bull": 1.0,
+          "p2_bull": 0.25,
+          "strategy": "S6",
+          "wr": 64.6,
+          "ci_95": [
+            63.93,
+            65.26
+          ]
+        },
+        {
+          "p1_bull": 1.0,
+          "p2_bull": 0.5,
+          "strategy": "E1",
+          "wr": 60.3,
+          "ci_95": [
+            59.62,
+            60.98
+          ]
+        },
+        {
+          "p1_bull": 1.0,
+          "p2_bull": 0.75,
+          "strategy": "E1",
+          "wr": 57.6,
+          "ci_95": [
+            56.91,
+            58.28
+          ]
+        }
+      ],
+      "significance_tests": [
+        {
+          "comparison": "bull 0.25 vs 0.5",
+          "mean_diff_pct": -8.602,
+          "t_statistic": -15.064,
+          "p_value": 0.0,
+          "significant": "True"
+        },
+        {
+          "comparison": "bull 0.25 vs 0.75",
+          "mean_diff_pct": -16.678,
+          "t_statistic": -15.083,
+          "p_value": 0.0,
+          "significant": "True"
+        },
+        {
+          "comparison": "bull 0.25 vs 1.0",
+          "mean_diff_pct": -23.844,
+          "t_statistic": -12.329,
+          "p_value": 0.0,
+          "significant": "True"
+        },
+        {
+          "comparison": "bull 0.5 vs 0.75",
+          "mean_diff_pct": -7.737,
+          "t_statistic": -14.28,
+          "p_value": 0.0,
+          "significant": "True"
+        },
+        {
+          "comparison": "bull 0.5 vs 1.0",
+          "mean_diff_pct": -14.955,
+          "t_statistic": -12.32,
+          "p_value": 0.0,
+          "significant": "True"
+        },
+        {
+          "comparison": "bull 0.75 vs 1.0",
+          "mean_diff_pct": -7.167,
+          "t_statistic": -11.377,
+          "p_value": 0.0,
+          "significant": "True"
+        }
+      ],
+      "chi2_strategy_independence": {
+        "chi2": 246.32,
+        "dof": 110,
+        "p_value": 1.9049e-12,
+        "significant": "True"
+      },
+      "cell_level_significance": {
+        "significant_cells": 2904,
+        "total_cells": 2904,
+        "pct_significant": 100.0
+      }
+    },
+    "interaction_effects": {
+      "description": "Does the impact of bull skill depend on MPR level?",
+      "bull_impact_by_mpr": [
+        {
+          "mpr": 0.8,
+          "avg_bull_advantage_pct": 1.712,
+          "std": 2.176,
+          "n": 6
+        },
+        {
+          "mpr": 1.0,
+          "avg_bull_advantage_pct": 2.71,
+          "std": 2.396,
+          "n": 6
+        },
+        {
+          "mpr": 1.2,
+          "avg_bull_advantage_pct": 3.617,
+          "std": 2.424,
+          "n": 6
+        },
+        {
+          "mpr": 1.5,
+          "avg_bull_advantage_pct": 4.475,
+          "std": 2.538,
+          "n": 6
+        },
+        {
+          "mpr": 2.0,
+          "avg_bull_advantage_pct": 5.342,
+          "std": 2.705,
+          "n": 6
+        },
+        {
+          "mpr": 2.5,
+          "avg_bull_advantage_pct": 5.895,
+          "std": 2.832,
+          "n": 6
+        },
+        {
+          "mpr": 3.0,
+          "avg_bull_advantage_pct": 6.348,
+          "std": 2.996,
+          "n": 6
+        },
+        {
+          "mpr": 3.6,
+          "avg_bull_advantage_pct": 6.833,
+          "std": 3.176,
+          "n": 6
+        },
+        {
+          "mpr": 4.0,
+          "avg_bull_advantage_pct": 7.164,
+          "std": 3.316,
+          "n": 6
+        },
+        {
+          "mpr": 4.9,
+          "avg_bull_advantage_pct": 8.375,
+          "std": 3.906,
+          "n": 6
+        },
+        {
+          "mpr": 5.6,
+          "avg_bull_advantage_pct": 10.262,
+          "std": 4.83,
+          "n": 6
+        }
+      ],
+      "interaction_test": {
+        "pearson_r": 0.5919,
+        "p_value": 0.0,
+        "significant": "True",
+        "interpretation": "Bull advantage increases with MPR (r=0.592)"
+      },
+      "low_vs_high_mpr": {
+        "low_mpr_avg_advantage": 3.129,
+        "high_mpr_avg_advantage": 8.159,
+        "t_statistic": -4.979,
+        "p_value": 9e-06
+      },
+      "regression_model": {
+        "intercept": -2.2194,
+        "bull_gap_coeff": 9.1928,
+        "mpr_coeff": 0.4463,
+        "interaction_coeff": 2.51812,
+        "r_squared": 0.968
+      }
+    },
+    "first_player_advantage": {
+      "description": "How asymmetric bull affects first-player advantage",
+      "by_condition": [
+        {
+          "p1_bull": 0.25,
+          "p2_bull": 0.5,
+          "avg_diagonal_wr": 43.95,
+          "std": 5.7,
+          "min": 14.7,
+          "max": 52.4
+        },
+        {
+          "p1_bull": 0.25,
+          "p2_bull": 0.75,
+          "avg_diagonal_wr": 39.84,
+          "std": 7.04,
+          "min": 10.0,
+          "max": 70.0
+        },
+        {
+          "p1_bull": 0.25,
+          "p2_bull": 1.0,
+          "avg_diagonal_wr": 35.63,
+          "std": 7.67,
+          "min": 0.0,
+          "max": 60.0
+        },
+        {
+          "p1_bull": 0.5,
+          "p2_bull": 0.25,
+          "avg_diagonal_wr": 52.07,
+          "std": 9.55,
+          "min": 0.0,
+          "max": 90.0
+        },
+        {
+          "p1_bull": 0.5,
+          "p2_bull": 0.75,
+          "avg_diagonal_wr": 44.54,
+          "std": 7.12,
+          "min": 10.0,
+          "max": 80.0
+        },
+        {
+          "p1_bull": 0.5,
+          "p2_bull": 1.0,
+          "avg_diagonal_wr": 41.04,
+          "std": 8.94,
+          "min": 0.0,
+          "max": 80.0
+        },
+        {
+          "p1_bull": 0.75,
+          "p2_bull": 0.25,
+          "avg_diagonal_wr": 56.84,
+          "std": 8.35,
+          "min": 10.0,
+          "max": 90.0
+        },
+        {
+          "p1_bull": 0.75,
+          "p2_bull": 0.5,
+          "avg_diagonal_wr": 52.02,
+          "std": 7.94,
+          "min": 18.4,
+          "max": 90.0
+        },
+        {
+          "p1_bull": 0.75,
+          "p2_bull": 1.0,
+          "avg_diagonal_wr": 44.81,
+          "std": 7.6,
+          "min": 10.0,
+          "max": 80.0
+        },
+        {
+          "p1_bull": 1.0,
+          "p2_bull": 0.25,
+          "avg_diagonal_wr": 60.17,
+          "std": 8.54,
+          "min": 20.0,
+          "max": 90.0
+        },
+        {
+          "p1_bull": 1.0,
+          "p2_bull": 0.5,
+          "avg_diagonal_wr": 55.7,
+          "std": 7.48,
+          "min": 20.0,
+          "max": 80.0
+        },
+        {
+          "p1_bull": 1.0,
+          "p2_bull": 0.75,
+          "avg_diagonal_wr": 51.98,
+          "std": 7.23,
+          "min": 10.0,
+          "max": 90.0
+        }
+      ],
+      "by_bull_gap": [
+        {
+          "bull_gap": -0.75,
+          "avg_p1_diagonal_wr": 35.63
+        },
+        {
+          "bull_gap": -0.5,
+          "avg_p1_diagonal_wr": 40.44
+        },
+        {
+          "bull_gap": -0.25,
+          "avg_p1_diagonal_wr": 44.43
+        },
+        {
+          "bull_gap": 0.25,
+          "avg_p1_diagonal_wr": 52.02
+        },
+        {
+          "bull_gap": 0.5,
+          "avg_p1_diagonal_wr": 56.27
+        },
+        {
+          "bull_gap": 0.75,
+          "avg_p1_diagonal_wr": 60.17
+        }
+      ],
+      "baseline_first_player_advantage": 50.0
+    }
+  }
+}

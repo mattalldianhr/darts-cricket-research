@@ -1,0 +1,1647 @@
+/* ==========================================================================
+   Darts Cricket Strategy Research — Main Stylesheet
+   Pure CSS, no dependencies. Google Fonts loaded via <link> in HTML.
+   Fonts: Inter (headings/nav), Source Serif 4 (body text)
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. CSS Custom Properties
+   -------------------------------------------------------------------------- */
+:root {
+  /* Colors */
+  --color-bg:            #fafaf5;
+  --color-text:          #2d2d2d;
+  --color-heading:       #1a1a1a;
+  --color-accent:        #e88a1a;
+  --color-accent-hover:  #d07a10;
+  --color-card-bg:       #ffffff;
+  --color-card-border:   #e0ddd5;
+  --color-nav-bg:        #1a1a1a;
+  --color-nav-text:      #fafaf5;
+  --color-green:         #2ecc71;
+  --color-yellow:        #f1c40f;
+  --color-red:           #e74c3c;
+  --color-table-header:  #f5f5f0;
+  --color-hover-tint:    rgba(232, 138, 26, 0.08);
+  --color-diagonal:      #f0f0eb;
+  --color-code-bg:       #f0efea;
+  --color-blockquote-bg: #fdf8f2;
+
+  /* Typography */
+  --font-heading: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-body:    'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-mono:    'SFMono-Regular', 'Consolas', 'Liberation Mono', 'Menlo', monospace;
+
+  /* Spacing */
+  --space-xs:  0.2rem;
+  --space-sm:  0.4rem;
+  --space-md:  0.75rem;
+  --space-lg:  1rem;
+  --space-xl:  1.5rem;
+  --space-2xl: 2rem;
+  --space-3xl: 2.5rem;
+
+  /* Layout */
+  --max-width:    1100px;
+  --side-padding: 6rem;
+  --nav-height:   44px;
+  --border-radius: 3px;
+  --border-radius-sm: 2px;
+  --border-radius-pill: 100px;
+
+  /* Shadows */
+  --shadow-card:    none;
+  --shadow-card-hover: none;
+  --shadow-nav:     0 1px 0 rgba(0, 0, 0, 0.1);
+}
+
+/* --------------------------------------------------------------------------
+   2. Reset & Base Styles
+   -------------------------------------------------------------------------- */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: calc(var(--nav-height) + var(--space-lg));
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  line-height: 1.55;
+  color: var(--color-text);
+  background-color: var(--color-bg);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
+  color: var(--color-heading);
+  line-height: 1.25;
+  margin-top: var(--space-2xl);
+  margin-bottom: var(--space-md);
+  font-weight: 700;
+}
+
+h1 { font-size: 1.5rem; }
+h2 { font-size: 1.2rem; }
+h3 { font-size: 1.05rem; }
+h4 { font-size: 0.95rem; }
+h5 { font-size: 0.85rem; }
+h6 { font-size: 0.8rem; }
+
+p {
+  margin-top: 0;
+  margin-bottom: var(--space-md);
+}
+
+a {
+  color: var(--color-accent);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+a:hover,
+a:focus {
+  color: var(--color-accent-hover);
+  text-decoration: underline;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+ul, ol {
+  padding-left: var(--space-xl);
+  margin-bottom: var(--space-md);
+}
+
+li {
+  margin-bottom: var(--space-xs);
+}
+
+hr {
+  border: none;
+  border-top: 1px solid var(--color-card-border);
+  margin: var(--space-2xl) 0;
+}
+
+/* --------------------------------------------------------------------------
+   3. Navigation — Fixed Top Bar
+   -------------------------------------------------------------------------- */
+.nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  height: var(--nav-height);
+  background: var(--color-nav-bg);
+  box-shadow: var(--shadow-nav);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.nav-inner {
+  width: 100%;
+  max-width: var(--max-width);
+  padding: 0 var(--side-padding);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.nav-brand {
+  font-family: var(--font-heading);
+  font-weight: 600;
+  font-size: 0.85rem;
+  color: var(--color-nav-text);
+  text-decoration: none;
+  white-space: nowrap;
+  letter-spacing: 0.02em;
+}
+
+.nav-brand:hover {
+  color: var(--color-accent);
+  text-decoration: none;
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.nav-links a {
+  font-family: var(--font-heading);
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--color-nav-text);
+  text-decoration: none;
+  padding: var(--space-xs) var(--space-sm);
+  border-radius: var(--border-radius-sm);
+  transition: color 0.2s ease, background-color 0.2s ease;
+  opacity: 0.7;
+}
+
+.nav-links a:hover {
+  color: var(--color-accent);
+  opacity: 1;
+  text-decoration: none;
+}
+
+.nav-links a.active {
+  color: var(--color-accent);
+  opacity: 1;
+  background: rgba(232, 138, 26, 0.1);
+}
+
+/* Hamburger toggle — hidden on desktop */
+.nav-toggle {
+  display: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: var(--space-xs);
+}
+
+.nav-toggle span {
+  display: block;
+  width: 22px;
+  height: 2px;
+  background: var(--color-nav-text);
+  margin: 5px 0;
+  border-radius: 2px;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+.nav-toggle.open span:nth-child(1) {
+  transform: translateY(7px) rotate(45deg);
+}
+
+.nav-toggle.open span:nth-child(2) {
+  opacity: 0;
+}
+
+.nav-toggle.open span:nth-child(3) {
+  transform: translateY(-7px) rotate(-45deg);
+}
+
+/* --------------------------------------------------------------------------
+   4. Hero Section
+   -------------------------------------------------------------------------- */
+.hero {
+  padding-top: calc(var(--nav-height) + var(--space-2xl));
+  padding-bottom: var(--space-xl);
+  text-align: left;
+}
+
+.hero-title {
+  font-family: var(--font-heading);
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--color-heading);
+  margin: 0 0 var(--space-sm) 0;
+  line-height: 1.2;
+}
+
+.hero-subtitle {
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  color: var(--color-text);
+  margin: 0 0 var(--space-sm) 0;
+  opacity: 0.7;
+}
+
+.hero-author {
+  font-family: var(--font-heading);
+  font-size: 0.75rem;
+  color: var(--color-text);
+  opacity: 0.5;
+  margin: 0;
+}
+
+/* --------------------------------------------------------------------------
+   5. Content Layout — .container
+   -------------------------------------------------------------------------- */
+.container {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 0 var(--side-padding);
+}
+
+/* Account for fixed nav on all pages */
+.page-content {
+  padding-top: calc(var(--nav-height) + var(--space-xl));
+  padding-bottom: var(--space-2xl);
+}
+
+.section {
+  margin-bottom: var(--space-2xl);
+}
+
+.section-title {
+  font-size: 1.05rem;
+  border-bottom: 1px solid var(--color-card-border);
+  padding-bottom: var(--space-xs);
+  margin-top: var(--space-xl);
+}
+
+/* --------------------------------------------------------------------------
+   6. Cards — Strategy Descriptions & General Callouts
+   -------------------------------------------------------------------------- */
+.card {
+  background: var(--color-card-bg);
+  border: 1px solid var(--color-card-border);
+  border-radius: var(--border-radius);
+  padding: var(--space-md);
+  margin-bottom: var(--space-md);
+}
+
+.card:hover {
+  border-color: #ccc;
+}
+
+.card-title {
+  font-family: var(--font-heading);
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--color-heading);
+  margin: 0 0 var(--space-xs) 0;
+}
+
+.card-body {
+  margin: 0;
+}
+
+.card-body p:last-child {
+  margin-bottom: 0;
+}
+
+/* --------------------------------------------------------------------------
+   7. Key Finding Callout — Orange-bordered highlight card
+   -------------------------------------------------------------------------- */
+.callout {
+  background: var(--color-card-bg);
+  border: 1px solid var(--color-card-border);
+  border-left: 3px solid var(--color-accent);
+  border-radius: var(--border-radius);
+  padding: var(--space-md);
+  margin: var(--space-lg) 0;
+}
+
+.callout-title {
+  font-family: var(--font-heading);
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--color-accent);
+  margin: 0 0 var(--space-xs) 0;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.callout p:last-child {
+  margin-bottom: 0;
+}
+
+/* --------------------------------------------------------------------------
+   8. Tournament Matrix Table
+   -------------------------------------------------------------------------- */
+.matrix-wrapper {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  margin: var(--space-lg) 0;
+  border: 1px solid var(--color-card-border);
+  border-radius: var(--border-radius);
+}
+
+/* Full-bleed matrix — breaks out of .container */
+.matrix-full-bleed {
+  width: 100vw;
+  position: relative;
+  left: 50%;
+  right: 50%;
+  margin-left: -50vw;
+  margin-right: -50vw;
+  padding: 0 var(--space-lg);
+  box-sizing: border-box;
+}
+
+.matrix-table {
+  border-collapse: collapse;
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  white-space: nowrap;
+  width: 100%;
+  table-layout: fixed;
+}
+
+.matrix-table th,
+.matrix-table td {
+  border: 1px solid var(--color-card-border);
+  padding: 2px 1px;
+  text-align: center;
+  overflow: hidden;
+}
+
+.matrix-table th {
+  background: var(--color-table-header);
+  font-family: var(--font-heading);
+  font-weight: 600;
+  font-size: 0.6rem;
+  color: var(--color-heading);
+}
+
+/* Row headers (first column) */
+.matrix-table th:first-child,
+.matrix-table td:first-child {
+  background: var(--color-table-header);
+  font-family: var(--font-heading);
+  font-weight: 600;
+  font-size: 0.6rem;
+  text-align: left;
+  padding-left: 4px;
+  width: 2.5em;
+}
+
+/* Top-left corner cell */
+.matrix-table thead th:first-child {
+  z-index: 4;
+}
+
+/* Diagonal cells */
+.matrix-table .matrix-diagonal {
+  background: var(--color-diagonal);
+  color: #999;
+}
+
+/* Base cell styling — colors applied via JS classes or inline styles */
+.matrix-cell {
+  transition: background-color 0.15s ease;
+  cursor: default;
+}
+
+/* Win-rate color classes (can also be set via inline style from JS) */
+.matrix-cell.win-high   { background-color: var(--color-green); color: #fff; }
+.matrix-cell.win-mid    { background-color: var(--color-yellow); color: #1a1a1a; }
+.matrix-cell.win-low    { background-color: var(--color-red); color: #fff; }
+
+/* Average column — visually separated from the matrix */
+.matrix-avg-header {
+  border-left: 2px solid var(--color-heading) !important;
+}
+
+.matrix-avg-cell {
+  border-left: 2px solid var(--color-heading) !important;
+  font-weight: 700;
+}
+
+/* Hover highlight — applied by JS to row/column on hover */
+.matrix-hover-row td,
+.matrix-hover-row th {
+  background-color: var(--color-hover-tint) !important;
+}
+
+.matrix-hover-col {
+  background-color: var(--color-hover-tint) !important;
+}
+
+/* --------------------------------------------------------------------------
+   9. Expandable Strategy Cards — <details>/<summary>
+   -------------------------------------------------------------------------- */
+details.strategy-card {
+  background: var(--color-card-bg);
+  border: 1px solid var(--color-card-border);
+  border-radius: var(--border-radius);
+  margin-bottom: var(--space-sm);
+  overflow: hidden;
+}
+
+details.strategy-card summary {
+  font-family: var(--font-heading);
+  font-weight: 600;
+  font-size: 0.85rem;
+  color: var(--color-heading);
+  padding: var(--space-sm) var(--space-md);
+  cursor: pointer;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  transition: background-color 0.15s ease;
+  user-select: none;
+}
+
+details.strategy-card summary::-webkit-details-marker {
+  display: none;
+}
+
+details.strategy-card summary::after {
+  content: '';
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-right: 2px solid var(--color-text);
+  border-bottom: 2px solid var(--color-text);
+  transform: rotate(45deg);
+  transition: transform 0.25s ease;
+  margin-left: var(--space-md);
+  flex-shrink: 0;
+  opacity: 0.5;
+}
+
+details.strategy-card[open] summary::after {
+  transform: rotate(-135deg);
+}
+
+details.strategy-card summary:hover {
+  background-color: var(--color-hover-tint);
+}
+
+details.strategy-card .strategy-content {
+  padding: 0 var(--space-md) var(--space-md);
+  border-top: 1px solid var(--color-card-border);
+  animation: slideDown 0.2s ease-out;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.strategy-content p:last-child {
+  margin-bottom: 0;
+}
+
+/* Strategy tag pills inside cards */
+.strategy-tag {
+  display: inline-block;
+  font-family: var(--font-heading);
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding: 2px 8px;
+  border-radius: var(--border-radius-pill);
+  margin-right: var(--space-xs);
+  background: var(--color-hover-tint);
+  color: var(--color-accent);
+}
+
+/* --------------------------------------------------------------------------
+   10. Rankings Table
+   -------------------------------------------------------------------------- */
+.rankings-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: var(--space-md) 0;
+  font-family: var(--font-heading);
+  font-size: 0.78rem;
+}
+
+.rankings-table th {
+  background: var(--color-table-header);
+  font-weight: 700;
+  text-align: left;
+  padding: var(--space-sm) var(--space-md);
+  border-bottom: 2px solid var(--color-card-border);
+  color: var(--color-heading);
+  white-space: nowrap;
+}
+
+.rankings-table td {
+  padding: var(--space-sm) var(--space-md);
+  border-bottom: 1px solid var(--color-card-border);
+  color: var(--color-text);
+}
+
+/* Alternating row colors */
+.rankings-table tbody tr:nth-child(even) {
+  background: var(--color-table-header);
+}
+
+/* Bold top entry */
+.rankings-table tbody tr:first-child {
+  font-weight: 700;
+}
+
+.rankings-table tbody tr:first-child td {
+  color: var(--color-heading);
+}
+
+/* Rank column — centered number */
+.rankings-table td:first-child {
+  text-align: center;
+  font-weight: 600;
+  color: var(--color-accent);
+  width: 3em;
+}
+
+/* --------------------------------------------------------------------------
+   11. Skill/MPR Level Toggle — Pill Buttons
+   -------------------------------------------------------------------------- */
+.toggle-group {
+  display: inline-flex;
+  border: 2px solid var(--color-card-border);
+  border-radius: var(--border-radius-pill);
+  overflow: hidden;
+  margin: var(--space-md) 0;
+  background: var(--color-card-bg);
+}
+
+.toggle-btn {
+  font-family: var(--font-heading);
+  font-size: 0.72rem;
+  font-weight: 500;
+  padding: var(--space-xs) var(--space-md);
+  border: none;
+  background: transparent;
+  color: var(--color-text);
+  cursor: pointer;
+  transition: background-color 0.2s ease, color 0.2s ease;
+  white-space: nowrap;
+}
+
+.toggle-btn:not(:last-child) {
+  border-right: 1px solid var(--color-card-border);
+}
+
+.toggle-btn:hover {
+  background: var(--color-hover-tint);
+}
+
+.toggle-btn.active {
+  background: var(--color-accent);
+  color: #fff;
+}
+
+.toggle-btn.active:hover {
+  background: var(--color-accent-hover);
+}
+
+/* --------------------------------------------------------------------------
+   12. Parameter Tables — Strategy Params
+   -------------------------------------------------------------------------- */
+.param-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: var(--space-md) 0;
+  font-size: 0.78rem;
+}
+
+.param-table th {
+  background: var(--color-table-header);
+  font-family: var(--font-heading);
+  font-weight: 600;
+  text-align: left;
+  padding: var(--space-sm) var(--space-md);
+  border-bottom: 2px solid var(--color-card-border);
+  color: var(--color-heading);
+}
+
+.param-table td {
+  padding: var(--space-sm) var(--space-md);
+  border-bottom: 1px solid var(--color-card-border);
+  vertical-align: top;
+}
+
+.param-table td:first-child {
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  white-space: nowrap;
+  color: var(--color-accent);
+  font-weight: 500;
+}
+
+.param-table tbody tr:nth-child(even) {
+  background: var(--color-table-header);
+}
+
+/* Boolean/value badges */
+.param-value {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  padding: 1px 6px;
+  border-radius: var(--border-radius-sm);
+  background: var(--color-code-bg);
+}
+
+.param-value.true  { color: var(--color-green); }
+.param-value.false { color: var(--color-red); }
+
+/* --------------------------------------------------------------------------
+   13. Grid / Heatmap Table — Phase Switch Grid Search
+   -------------------------------------------------------------------------- */
+.heatmap-wrapper {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  margin: var(--space-lg) 0;
+  border: 1px solid var(--color-card-border);
+  border-radius: var(--border-radius);
+}
+
+.heatmap-table {
+  border-collapse: collapse;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  white-space: nowrap;
+  width: 100%;
+}
+
+.heatmap-table th {
+  background: var(--color-table-header);
+  font-family: var(--font-heading);
+  font-weight: 600;
+  font-size: 0.75rem;
+  padding: var(--space-xs) var(--space-sm);
+  border: 1px solid var(--color-card-border);
+  text-align: center;
+  color: var(--color-heading);
+}
+
+.heatmap-table td {
+  padding: var(--space-xs) var(--space-sm);
+  border: 1px solid var(--color-card-border);
+  text-align: center;
+  min-width: 3.5em;
+  transition: outline 0.15s ease;
+}
+
+.heatmap-table td:hover {
+  outline: 2px solid var(--color-accent);
+  outline-offset: -2px;
+  z-index: 1;
+  position: relative;
+}
+
+/* Row label column */
+.heatmap-table td:first-child,
+.heatmap-table th:first-child {
+  text-align: left;
+  font-family: var(--font-heading);
+  font-weight: 600;
+  background: var(--color-table-header);
+  min-width: 5em;
+}
+
+/* Heatmap color grades — applied via inline styles or classes from JS */
+.heat-1 { background-color: #fee0d2; color: #1a1a1a; }
+.heat-2 { background-color: #fdccb8; color: #1a1a1a; }
+.heat-3 { background-color: #fdb97e; color: #1a1a1a; }
+.heat-4 { background-color: #fd9243; color: #fff; }
+.heat-5 { background-color: #e88a1a; color: #fff; }
+.heat-6 { background-color: #d07a10; color: #fff; }
+.heat-best { outline: 3px solid var(--color-heading); outline-offset: -3px; }
+
+/* --------------------------------------------------------------------------
+   14. Footer
+   -------------------------------------------------------------------------- */
+.footer {
+  border-top: 1px solid var(--color-card-border);
+  padding: var(--space-xl) 0;
+  margin-top: var(--space-3xl);
+  text-align: center;
+  color: var(--color-text);
+  opacity: 0.5;
+  font-size: 0.8rem;
+  font-family: var(--font-heading);
+}
+
+.footer a {
+  color: var(--color-text);
+  text-decoration: underline;
+}
+
+.footer a:hover {
+  color: var(--color-accent);
+}
+
+/* --------------------------------------------------------------------------
+   15. Code Blocks & Inline Code
+   -------------------------------------------------------------------------- */
+code {
+  font-family: var(--font-mono);
+  font-size: 0.88em;
+  background: var(--color-code-bg);
+  padding: 2px 6px;
+  border-radius: var(--border-radius-sm);
+  color: var(--color-heading);
+}
+
+pre {
+  background: var(--color-code-bg);
+  border: 1px solid var(--color-card-border);
+  border-radius: var(--border-radius);
+  padding: var(--space-md) var(--space-lg);
+  overflow-x: auto;
+  margin: var(--space-lg) 0;
+  line-height: 1.5;
+}
+
+pre code {
+  background: none;
+  padding: 0;
+  border-radius: 0;
+  font-size: 0.85rem;
+}
+
+/* --------------------------------------------------------------------------
+   16. Blockquotes
+   -------------------------------------------------------------------------- */
+blockquote {
+  border-left: 4px solid var(--color-accent);
+  margin: var(--space-lg) 0;
+  padding: var(--space-md) var(--space-lg);
+  background: var(--color-blockquote-bg);
+  border-radius: 0 var(--border-radius) var(--border-radius) 0;
+  font-style: italic;
+  color: var(--color-text);
+}
+
+blockquote p:last-child {
+  margin-bottom: 0;
+}
+
+blockquote cite {
+  display: block;
+  margin-top: var(--space-sm);
+  font-style: normal;
+  font-size: 0.85rem;
+  opacity: 0.7;
+}
+
+/* --------------------------------------------------------------------------
+   17. Methodology Tables — Skill Profile Outcome Distributions
+   -------------------------------------------------------------------------- */
+.methodology-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: var(--space-md) 0;
+  font-size: 0.78rem;
+}
+
+.methodology-table th {
+  background: var(--color-table-header);
+  font-family: var(--font-heading);
+  font-weight: 600;
+  text-align: center;
+  padding: var(--space-sm) var(--space-md);
+  border: 1px solid var(--color-card-border);
+  color: var(--color-heading);
+}
+
+.methodology-table th:first-child {
+  text-align: left;
+}
+
+.methodology-table td {
+  padding: var(--space-sm) var(--space-md);
+  border: 1px solid var(--color-card-border);
+  text-align: center;
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+}
+
+.methodology-table td:first-child {
+  font-family: var(--font-heading);
+  font-weight: 500;
+  text-align: left;
+}
+
+.methodology-table tbody tr:nth-child(even) {
+  background: var(--color-table-header);
+}
+
+/* Highlighted row for "best" profile */
+.methodology-table tbody tr.highlight {
+  background: var(--color-hover-tint);
+  font-weight: 600;
+}
+
+/* --------------------------------------------------------------------------
+   18. Utility Classes
+   -------------------------------------------------------------------------- */
+.text-center  { text-align: center; }
+.text-right   { text-align: right; }
+.text-muted   { opacity: 0.6; }
+.text-accent  { color: var(--color-accent); }
+.text-mono    { font-family: var(--font-mono); }
+.text-small   { font-size: 0.85rem; }
+.mt-0  { margin-top: 0; }
+.mt-1  { margin-top: var(--space-md); }
+.mt-2  { margin-top: var(--space-xl); }
+.mb-0  { margin-bottom: 0; }
+.mb-1  { margin-bottom: var(--space-md); }
+.mb-2  { margin-bottom: var(--space-xl); }
+.hidden { display: none; }
+
+/* Flex helpers */
+.flex       { display: flex; }
+.flex-wrap  { flex-wrap: wrap; }
+.flex-gap   { gap: var(--space-md); }
+.flex-between { justify-content: space-between; }
+.flex-center  { align-items: center; }
+
+/* --------------------------------------------------------------------------
+   19. Responsive — Breakpoint at 768px
+   -------------------------------------------------------------------------- */
+@media (max-width: 768px) {
+  /* Typography scale down */
+  body {
+    font-size: 0.82rem;
+  }
+
+  h1 { font-size: 1.25rem; }
+  h2 { font-size: 1.05rem; }
+  h3 { font-size: 0.95rem; }
+
+  .hero-title {
+    font-size: 1.3rem;
+  }
+
+  .hero-subtitle {
+    font-size: 0.8rem;
+  }
+
+  /* Container padding */
+  .container {
+    padding: 0 var(--space-md);
+  }
+
+  /* Navigation — mobile hamburger */
+  .nav-toggle {
+    display: block;
+  }
+
+  .nav-links {
+    display: none;
+    position: absolute;
+    top: var(--nav-height);
+    left: 0;
+    right: 0;
+    flex-direction: column;
+    background: var(--color-nav-bg);
+    padding: var(--space-sm) 0;
+    box-shadow: var(--shadow-nav);
+    gap: 0;
+  }
+
+  .nav-links.open {
+    display: flex;
+  }
+
+  .nav-links li {
+    margin: 0;
+  }
+
+  .nav-links a {
+    display: block;
+    padding: var(--space-sm) var(--space-lg);
+    font-size: 0.95rem;
+    border-radius: 0;
+  }
+
+  .nav-links a:hover,
+  .nav-links a.active {
+    background: rgba(232, 138, 26, 0.15);
+  }
+
+  /* Tables scroll horizontally */
+  .matrix-wrapper,
+  .heatmap-wrapper {
+    margin-left: calc(-1 * var(--space-md));
+    margin-right: calc(-1 * var(--space-md));
+    border-radius: 0;
+    border-left: none;
+    border-right: none;
+  }
+
+  /* Rankings table becomes scrollable */
+  .rankings-table-wrapper {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Cards reduce padding */
+  .card {
+    padding: var(--space-md);
+  }
+
+  .callout {
+    padding: var(--space-md);
+  }
+
+  details.strategy-card summary {
+    padding: var(--space-sm) var(--space-md);
+  }
+
+  details.strategy-card .strategy-content {
+    padding: 0 var(--space-md) var(--space-md);
+  }
+
+  /* Toggle group wraps if needed */
+  .toggle-group {
+    flex-wrap: wrap;
+    border-radius: var(--border-radius);
+  }
+
+  .toggle-btn {
+    flex: 1 1 auto;
+    text-align: center;
+    padding: var(--space-sm) var(--space-md);
+  }
+
+  /* Section spacing */
+  .section {
+    margin-bottom: var(--space-xl);
+  }
+
+  .space-3xl {
+    padding-top: var(--space-xl);
+    padding-bottom: var(--space-xl);
+  }
+}
+
+/* Small phones */
+@media (max-width: 480px) {
+  .hero-title {
+    font-size: 1.6rem;
+  }
+
+  .hero-subtitle {
+    font-size: 1rem;
+  }
+
+  h1 { font-size: 1.5rem; }
+  h2 { font-size: 1.25rem; }
+
+  .matrix-table {
+    font-size: 0.5rem;
+  }
+
+  .matrix-table th,
+  .matrix-table td {
+    padding: 1px 1px;
+  }
+
+  .matrix-full-bleed {
+    padding: 0 var(--space-xs);
+  }
+}
+
+/* --------------------------------------------------------------------------
+   20. Print Styles
+   -------------------------------------------------------------------------- */
+@media print {
+  .nav,
+  .nav-toggle,
+  .toggle-group {
+    display: none;
+  }
+
+  body {
+    color: #000;
+    background: #fff;
+    font-size: 11pt;
+  }
+
+  .container {
+    max-width: 100%;
+    padding: 0;
+  }
+
+  .page-content {
+    padding-top: 0;
+  }
+
+  .card,
+  .callout,
+  details.strategy-card {
+    box-shadow: none;
+    border: 1px solid #ccc;
+    break-inside: avoid;
+  }
+
+  a {
+    color: #000;
+    text-decoration: underline;
+  }
+
+  .matrix-table th,
+  .matrix-table td:first-child {
+    position: static;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   21. Strategy Advisor — Board & Output
+   -------------------------------------------------------------------------- */
+
+/* Board container */
+.advisor-board {
+  max-width: 440px;
+  margin: 0 auto;
+}
+
+.advisor-board-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--font-heading);
+  font-size: 0.85rem;
+}
+
+.advisor-board-table th {
+  background: var(--color-table-header);
+  font-weight: 600;
+  font-size: 0.75rem;
+  padding: var(--space-xs) var(--space-sm);
+  text-align: center;
+  border: 1px solid var(--color-card-border);
+  color: var(--color-heading);
+}
+
+.advisor-board-table td {
+  border: 1px solid var(--color-card-border);
+  text-align: center;
+  padding: var(--space-xs);
+  vertical-align: middle;
+}
+
+.advisor-target-label {
+  font-weight: 700;
+  font-size: 0.9rem;
+  color: var(--color-heading);
+  background: var(--color-table-header);
+  width: 60px;
+}
+
+/* Clickable mark cells */
+.advisor-mark {
+  width: 48px;
+  height: 48px;
+  line-height: 48px;
+  text-align: center;
+  cursor: pointer;
+  font-family: var(--font-heading);
+  font-size: 1.1rem;
+  font-weight: 700;
+  border-radius: var(--border-radius-sm);
+  transition: background-color 0.15s ease, color 0.15s ease;
+  user-select: none;
+  margin: 0 auto;
+}
+
+.advisor-mark:hover {
+  background: var(--color-hover-tint);
+}
+
+.advisor-mark-0 {
+  color: #ccc;
+}
+
+.advisor-mark-1 {
+  color: var(--color-text);
+}
+
+.advisor-mark-2 {
+  color: var(--color-accent);
+}
+
+.advisor-mark-3 {
+  color: var(--color-green);
+  font-size: 1.2rem;
+}
+
+/* Scoreable highlight */
+.advisor-scoreable-p0 {
+  box-shadow: inset 0 0 0 2px var(--color-accent);
+  border-radius: var(--border-radius-sm);
+}
+
+.advisor-scoreable-p1 {
+  box-shadow: inset 0 0 0 2px var(--color-accent);
+  border-radius: var(--border-radius-sm);
+}
+
+/* Score inputs */
+.advisor-scores {
+  display: flex;
+  gap: var(--space-md);
+  margin-top: var(--space-md);
+  justify-content: center;
+}
+
+.advisor-score-group {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-xs);
+}
+
+.advisor-score-group label {
+  font-family: var(--font-heading);
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--color-text);
+  opacity: 0.7;
+}
+
+.advisor-score-input {
+  width: 80px;
+  padding: var(--space-xs) var(--space-sm);
+  border: 1px solid var(--color-card-border);
+  border-radius: var(--border-radius);
+  font-family: var(--font-mono);
+  font-size: 0.9rem;
+  text-align: center;
+  background: var(--color-card-bg);
+  color: var(--color-heading);
+}
+
+.advisor-score-input:focus {
+  outline: 2px solid var(--color-accent);
+  outline-offset: -1px;
+  border-color: var(--color-accent);
+}
+
+/* Turn controls */
+.advisor-turn-controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-lg);
+  margin-top: var(--space-md);
+  flex-wrap: wrap;
+}
+
+.advisor-turn-radio {
+  display: flex;
+  gap: var(--space-md);
+  font-family: var(--font-heading);
+  font-size: 0.8rem;
+}
+
+.advisor-turn-radio label {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+}
+
+.advisor-darts-group {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.advisor-darts-label {
+  font-family: var(--font-heading);
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--color-text);
+  opacity: 0.7;
+}
+
+.advisor-darts-toggle {
+  margin: 0;
+}
+
+/* Reset button */
+.advisor-reset-btn {
+  display: block;
+  margin: var(--space-md) auto 0;
+  padding: var(--space-xs) var(--space-lg);
+  font-family: var(--font-heading);
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--color-text);
+  background: var(--color-card-bg);
+  border: 1px solid var(--color-card-border);
+  border-radius: var(--border-radius);
+  cursor: pointer;
+  transition: border-color 0.2s ease, background-color 0.2s ease;
+}
+
+.advisor-reset-btn:hover {
+  border-color: var(--color-accent);
+  background: var(--color-hover-tint);
+}
+
+/* Consensus callout */
+.advisor-consensus-throw {
+  font-family: var(--font-heading);
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--color-heading);
+  margin: 0 0 var(--space-xs) 0;
+}
+
+.advisor-consensus-detail {
+  font-size: 0.85rem;
+  margin: 0 0 var(--space-xs) 0;
+}
+
+.advisor-consensus-alt {
+  font-size: 0.8rem;
+  opacity: 0.7;
+  margin: 0;
+}
+
+/* Recommendation table */
+.advisor-rec-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.78rem;
+  margin: var(--space-sm) 0;
+}
+
+.advisor-rec-table th {
+  background: var(--color-table-header);
+  font-family: var(--font-heading);
+  font-weight: 600;
+  text-align: left;
+  padding: var(--space-sm) var(--space-md);
+  border-bottom: 2px solid var(--color-card-border);
+  color: var(--color-heading);
+  white-space: nowrap;
+}
+
+.advisor-rec-table td {
+  padding: var(--space-sm) var(--space-md);
+  border-bottom: 1px solid var(--color-card-border);
+  vertical-align: middle;
+}
+
+.advisor-rec-table tbody tr:nth-child(even) {
+  background: var(--color-table-header);
+}
+
+/* Phase badges */
+.advisor-phase-badge {
+  display: inline-block;
+  font-family: var(--font-heading);
+  font-size: 0.65rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding: 1px 8px;
+  border-radius: var(--border-radius-pill);
+  white-space: nowrap;
+}
+
+.advisor-phase-score {
+  background: rgba(46, 204, 113, 0.15);
+  color: #1a8a4a;
+}
+
+.advisor-phase-cover {
+  background: rgba(241, 196, 15, 0.2);
+  color: #9a7d0a;
+}
+
+.advisor-phase-chase {
+  background: rgba(231, 76, 60, 0.15);
+  color: #c0392b;
+}
+
+.advisor-phase-close {
+  background: rgba(0, 0, 0, 0.06);
+  color: #666;
+}
+
+.advisor-phase-redirect {
+  background: rgba(155, 89, 182, 0.15);
+  color: #7d3c98;
+}
+
+/* Expand link */
+.advisor-expand-link {
+  display: inline-block;
+  margin-top: var(--space-sm);
+  padding: var(--space-xs) var(--space-md);
+  font-family: var(--font-heading);
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--color-accent);
+  background: none;
+  border: 1px solid var(--color-card-border);
+  border-radius: var(--border-radius);
+  cursor: pointer;
+  transition: border-color 0.2s ease;
+}
+
+.advisor-expand-link:hover {
+  border-color: var(--color-accent);
+}
+
+/* Win probability panel */
+.advisor-win-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-md);
+}
+
+.advisor-win-item {
+  flex: 1 1 120px;
+  background: var(--color-card-bg);
+  border: 1px solid var(--color-card-border);
+  border-radius: var(--border-radius);
+  padding: var(--space-sm) var(--space-md);
+  text-align: center;
+}
+
+.advisor-win-label {
+  display: block;
+  font-family: var(--font-heading);
+  font-size: 0.65rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  opacity: 0.6;
+  margin-bottom: var(--space-xs);
+}
+
+.advisor-win-value {
+  display: block;
+  font-family: var(--font-heading);
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--color-heading);
+}
+
+.advisor-win-sub {
+  display: block;
+  font-size: 0.7rem;
+  opacity: 0.6;
+  margin-top: var(--space-xs);
+}
+
+.advisor-win-h2h {
+  flex-basis: 100%;
+}
+
+/* Advisor responsive */
+@media (max-width: 768px) {
+  .advisor-board {
+    max-width: 100%;
+  }
+
+  .advisor-mark {
+    width: 44px;
+    height: 44px;
+    line-height: 44px;
+    font-size: 1rem;
+  }
+
+  .advisor-turn-controls {
+    flex-direction: column;
+    gap: var(--space-sm);
+  }
+
+  .advisor-rec-table {
+    display: block;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .advisor-win-grid {
+    flex-direction: column;
+  }
+
+  .advisor-win-item {
+    flex-basis: auto;
+  }
+}
+
+/* ================================================================== */
+/*  Findings Grid (bull-advisor.html key findings cards)              */
+/* ================================================================== */
+
+.findings-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: var(--space-md);
+  margin: var(--space-lg) 0;
+}
+
+/* ================================================================== */
+/*  Bull Advisor — Interactive Strategy Guide                         */
+/* ================================================================== */
+
+.bull-advisor-inputs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-xl);
+  margin: var(--space-lg) 0;
+}
+
+@media (max-width: 768px) {
+  .bull-advisor-inputs {
+    grid-template-columns: 1fr;
+  }
+}
+
+.bull-advisor-player h3 {
+  margin: 0 0 var(--space-sm) 0;
+  font-size: 1.1rem;
+  color: var(--color-accent);
+}
+
+.bull-advisor-field {
+  margin-bottom: var(--space-md);
+}
+
+.bull-advisor-field label {
+  display: block;
+  font-weight: 600;
+  font-size: 0.8rem;
+  margin-bottom: var(--space-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #666;
+}
+
+/* Result Panel */
+.bull-advisor-result {
+  margin-top: var(--space-lg);
+  padding: var(--space-lg);
+  border: 2px solid var(--color-card-border, #e0ddd5);
+  border-radius: 6px;
+  background: var(--color-card-bg, #fff);
+}
+
+.bull-recommendation-primary {
+  margin-bottom: var(--space-lg);
+}
+
+.bull-rec-header {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-md);
+  flex-wrap: wrap;
+}
+
+.bull-rec-strategy {
+  font-size: 2rem;
+  font-weight: 800;
+  color: var(--color-accent);
+  letter-spacing: -0.02em;
+}
+
+.bull-rec-wr {
+  font-size: 1.2rem;
+  font-weight: 600;
+  padding: 2px 10px;
+  border-radius: 100px;
+}
+
+.bull-wr-favorable {
+  background: #d4edda;
+  color: #155724;
+}
+
+.bull-wr-unfavorable {
+  background: #f8d7da;
+  color: #721c24;
+}
+
+.bull-rec-description {
+  font-size: 0.9rem;
+  color: #666;
+  margin-top: var(--space-xs);
+}
+
+.bull-alternatives {
+  margin-top: var(--space-md);
+  padding-top: var(--space-md);
+  border-top: 1px solid var(--color-card-border, #e0ddd5);
+}
+
+.bull-alternatives h4 {
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #666;
+  margin: 0 0 var(--space-sm) 0;
+}
+
+.bull-opponent-info {
+  margin-top: var(--space-md);
+  padding-top: var(--space-md);
+  border-top: 1px solid var(--color-card-border, #e0ddd5);
+}
+
+.bull-opponent-info h4 {
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #666;
+  margin: 0 0 var(--space-xs) 0;
+}
+
+/* ================================================================== */
+/*  Bull Hit Rate Percentage Input                                     */
+/* ================================================================== */
+
+.advisor-bull-input-group {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+}
+
+.advisor-bull-pct-input {
+  width: 80px;
+  padding: 6px 10px;
+  border: 2px solid var(--color-card-border, #e0ddd5);
+  border-radius: 4px;
+  font-size: 1rem;
+  font-family: inherit;
+  text-align: center;
+  transition: border-color 0.15s;
+}
+
+.advisor-bull-pct-input:focus {
+  outline: none;
+  border-color: var(--color-accent);
+}
+
+.advisor-bull-pct-input::placeholder {
+  color: #aaa;
+  font-size: 0.85rem;
+}
+
+.advisor-bull-pct-label {
+  font-size: 0.85rem;
+  color: #666;
+}
+
+.bull-rec-counter {
+  font-size: 0.9rem;
+  color: #666;
+  margin-top: var(--space-xs);
+}
+
+/* Utility: mt-xs, mt-sm, mt-lg additions if not present */
+.mt-xs { margin-top: var(--space-xs); }
+.mt-sm { margin-top: var(--space-sm); }
+.mt-lg { margin-top: var(--space-lg); }

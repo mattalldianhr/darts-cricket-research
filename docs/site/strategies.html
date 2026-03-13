@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Strategy Definitions - Darts Cricket Research</title>
+  <meta name="description" content="Detailed definitions of all 17 Frongello strategies, 4 experimental variants, and the Phase Switch strategy for darts cricket.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- ================================================================== -->
+  <!--  Navigation                                                         -->
+  <!-- ================================================================== -->
+  <nav class="nav">
+    <div class="nav-inner">
+      <a href="index.html" class="nav-brand">Darts Cricket Research</a>
+      <button class="hamburger-btn nav-toggle" aria-label="Toggle navigation">
+        <span></span><span></span><span></span>
+      </button>
+      <div class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="strategies.html" class="active">Strategies</a>
+        <a href="results.html">Results</a>
+        <a href="phase-switch.html">Phase Switch</a>
+        <a href="bull-analysis.html">Bull Analysis</a>
+        <a href="ai-agent.html">AI Agent</a>
+        <a href="methodology.html">Methodology</a>
+        <a href="advisor.html">Advisor</a>
+        <a href="bull-advisor.html">Bull Advisor</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ================================================================== -->
+  <!--  Hero                                                                -->
+  <!-- ================================================================== -->
+  <header class="hero">
+    <div class="container">
+      <h1 class="hero-title">Strategy Definitions</h1>
+      <p class="hero-subtitle">17 Frongello strategies, 4 experimental variants, and Phase Switch</p>
+    </div>
+  </header>
+
+  <!-- ================================================================== -->
+  <!--  Main Content                                                        -->
+  <!-- ================================================================== -->
+  <main class="container">
+
+    <!-- ---------------------------------------------------------------- -->
+    <!--  Decision Framework                                                -->
+    <!-- ---------------------------------------------------------------- -->
+    <section class="section">
+      <h2 class="section-title">Decision Framework</h2>
+      <p>
+        Every strategy in this study follows a common decision flow. On each dart, the player evaluates a short priority list to determine which target to aim at. The flow, in priority order, is:
+      </p>
+      <ol>
+        <li>
+          <strong>Chase</strong> (if enabled): Close the highest-value target your opponent has closed that you have not. This blocks their ability to score on that number. Not all strategies use chasing; when disabled, this step is skipped entirely.
+        </li>
+        <li>
+          <strong>Score or Cover decision</strong>: Compare your current point lead to a threshold derived from the lead multiplier parameter.
+          <ul>
+            <li>If your lead is less than or equal to the threshold: <strong>SCORE</strong> &mdash; aim at the highest-value target you have closed that your opponent has not. Every hit past 3 marks earns points equal to the target's face value.</li>
+            <li>If your lead exceeds the threshold: <strong>COVER</strong> &mdash; close the highest-value target your opponent has not yet closed. This denies them future scoring opportunities and progresses toward closing all 7 targets.</li>
+          </ul>
+        </li>
+        <li>
+          <strong>Extra darts</strong> (if enabled): On darts 2 and 3 of a turn, if the current closing target cannot be finished this turn (marks needed exceed darts remaining), redirect those darts to scoring on your highest closed target instead. This salvages darts that would otherwise make only partial progress on a close.
+        </li>
+        <li>
+          <strong>S1 special case</strong>: Strategy 1 bypasses the score/cover decision entirely. It always closes targets in descending order (20, 19, 18, 17, 16, 15, Bullseye) and never scores until all 7 targets are closed. It then scores on whatever the opponent has not yet closed.
+        </li>
+      </ol>
+    </section>
+
+    <!-- ---------------------------------------------------------------- -->
+    <!--  The Three Parameters                                              -->
+    <!-- ---------------------------------------------------------------- -->
+    <section class="section">
+      <h2 class="section-title">The Three Parameters</h2>
+      <p>
+        All 17 Frongello strategies are defined by three parameters. Every strategy is a unique combination of these values.
+      </p>
+      <table class="param-table">
+        <thead>
+          <tr>
+            <th>Parameter</th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Lead Multiplier</td>
+            <td>
+              The score-lead threshold, expressed as a multiple of the highest unblocked target value.
+              <code>None</code> means always cover (S1 behavior).
+              <code>0</code> means score until you have any lead at all, then immediately switch to covering (S2 behavior).
+              <code>3</code>, <code>6</code>, or <code>9</code> require increasingly large point cushions before covering &mdash; for example, with 20 still open, a 3&times; multiplier demands a 60-point lead before switching to cover mode.
+            </td>
+          </tr>
+          <tr>
+            <td>Extra Darts</td>
+            <td>
+              When closing a target that cannot be finished this turn (marks needed exceed darts remaining), redirect the remaining darts to scoring on your highest closed target. This prevents wasting darts on partial closing progress.
+            </td>
+          </tr>
+          <tr>
+            <td>Chase</td>
+            <td>
+              First priority: close any target your opponent has closed that you have not, starting with the highest value. This blocks the opponent's scoring opportunity on that number. Frongello found that chasing is generally suboptimal.
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- ---------------------------------------------------------------- -->
+    <!--  Frongello's 17 Strategies                                         -->
+    <!-- ---------------------------------------------------------------- -->
+    <section class="section">
+      <h2 class="section-title">Frongello's 17 Strategies (S1&ndash;S17)</h2>
+
+      <h3>Master Parameter Table</h3>
+      <div class="matrix-wrapper">
+        <table class="rankings-table">
+          <thead>
+            <tr>
+              <th>Strategy</th>
+              <th>Lead Multiplier</th>
+              <th>Extra Darts</th>
+              <th>Chase</th>
+              <th>Group</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="text-accent">S1</td>
+              <td>&mdash; (always cover)</td>
+              <td><span class="param-value false">No</span></td>
+              <td><span class="param-value false">No</span></td>
+              <td>Cover Only</td>
+            </tr>
+            <tr>
+              <td class="text-accent">S2</td>
+              <td><code>0</code></td>
+              <td><span class="param-value false">No</span></td>
+              <td><span class="param-value false">No</span></td>
+              <td>Basic</td>
+            </tr>
+            <tr>
+              <td class="text-accent">S3</td>
+              <td><code>3&times;</code></td>
+              <td><span class="param-value false">No</span></td>
+              <td><span class="param-value false">No</span></td>
+              <td>Basic</td>
+            </tr>
+            <tr>
+              <td class="text-accent">S4</td>
+              <td><code>6&times;</code></td>
+              <td><span class="param-value false">No</span></td>
+              <td><span class="param-value false">No</span></td>
+              <td>Basic</td>
+            </tr>
+            <tr>
+              <td class="text-accent">S5</td>
+              <td><code>9&times;</code></td>
+              <td><span class="param-value false">No</span></td>
+              <td><span class="param-value false">No</span></td>
+              <td>Basic</td>
+            </tr>
+            <tr>
+              <td class="text-accent">S6</td>
+              <td><code>0</code></td>
+              <td><span class="param-value true">Yes</span></td>
+              <td><span class="param-value false">No</span></td>
+              <td>Extra Darts</td>
+            </tr>
+            <tr>
+              <td class="text-accent">S7</td>
+              <td><code>3&times;</code></td>
+              <td><span class="param-value true">Yes</span></td>
+              <td><span class="param-value false">No</span></td>
+              <td>Extra Darts</td>
+            </tr>
+            <tr>
+              <td class="text-accent">S8</td>
+              <td><code>6&times;</code></td>
+              <td><span class="param-value true">Yes</span></td>
+              <td><span class="param-value false">No</span></td>
+              <td>Extra Darts</td>
+            </tr>
+            <tr>
+              <td class="text-accent">S9</td>
+              <td><code>9&times;</code></td>
+              <td><span class="param-value true">Yes</span></td>
+              <td><span class="param-value false">No</span></td>
+              <td>Extra Darts</td>
+            </tr>
+            <tr>
+              <td class="text-accent">S10</td>
+              <td><code>0</code></td>
+              <td><span class="param-value false">No</span></td>
+              <td><span class="param-value true">Yes</span></td>
+              <td>Chase</td>
+            </tr>
+            <tr>
+              <td class="text-accent">S11</td>
+              <td><code>3&times;</code></td>
+              <td><span class="param-value false">No</span></td>
+              <td><span class="param-value true">Yes</span></td>
+              <td>Chase</td>
+            </tr>
+            <tr>
+              <td class="text-accent">S12</td>
+              <td><code>6&times;</code></td>
+              <td><span class="param-value false">No</span></td>
+              <td><span class="param-value true">Yes</span></td>
+              <td>Chase</td>
+            </tr>
+            <tr>
+              <td class="text-accent">S13</td>
+              <td><code>9&times;</code></td>
+              <td><span class="param-value false">No</span></td>
+              <td><span class="param-value true">Yes</span></td>
+              <td>Chase</td>
+            </tr>
+            <tr>
+              <td class="text-accent">S14</td>
+              <td><code>0</code></td>
+              <td><span class="param-value true">Yes</span></td>
+              <td><span class="param-value true">Yes</span></td>
+              <td>Combined</td>
+            </tr>
+            <tr>
+              <td class="text-accent">S15</td>
+              <td><code>3&times;</code></td>
+              <td><span class="param-value true">Yes</span></td>
+              <td><span class="param-value true">Yes</span></td>
+              <td>Combined</td>
+            </tr>
+            <tr>
+              <td class="text-accent">S16</td>
+              <td><code>6&times;</code></td>
+              <td><span class="param-value true">Yes</span></td>
+              <td><span class="param-value true">Yes</span></td>
+              <td>Combined</td>
+            </tr>
+            <tr>
+              <td class="text-accent">S17</td>
+              <td><code>9&times;</code></td>
+              <td><span class="param-value true">Yes</span></td>
+              <td><span class="param-value true">Yes</span></td>
+              <td>Combined</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Strategy Groups</h3>
+
+      <!-- S1 — Cover Only -->
+      <details class="strategy-card" open>
+        <summary>
+          <span>S1 &mdash; Cover Only</span>
+          <span class="strategy-tag">Baseline</span>
+        </summary>
+        <div class="strategy-content">
+          <p>
+            The simplest strategy. Close targets in strict descending order: 20, 19, 18, 17, 16, 15, Bullseye. Never score until all 7 targets are closed. Once all targets are closed, score on whatever the opponent has not yet closed.
+          </p>
+          <p>
+            S1 serves as the baseline strategy in every tournament. It is predictable and entirely defensive &mdash; it never builds a point lead during the closing phase. Against strategies that score early, S1 frequently falls behind on points and must rely on closing out first to win. Its simplicity makes it a useful reference point, but it is rarely competitive.
+          </p>
+        </div>
+      </details>
+
+      <!-- S2-S5 — Threshold Variants -->
+      <details class="strategy-card">
+        <summary>
+          <span>S2&ndash;S5 &mdash; Threshold Variants</span>
+          <span class="strategy-tag">Basic</span>
+        </summary>
+        <div class="strategy-content">
+          <p>
+            These four strategies introduce the score/cover decision. They differ only in how large a point lead is required before switching from scoring to covering.
+          </p>
+
+          <h4>S2 (threshold = 0)</h4>
+          <p>
+            Score until you have <em>any</em> lead at all, then switch to covering. Even a single point ahead is enough to trigger cover mode. This is Frongello's optimal strategy among the original 17 &mdash; it balances offense and defense effectively. By requiring only a minimal lead, S2 avoids over-investing in scoring while still ensuring it never covers from behind on points.
+          </p>
+
+          <h4>S3 (threshold = 3&times;)</h4>
+          <p>
+            Score until your lead exceeds 3 times the highest unblocked target value. At the start of a game with 20 still open, that means building a 60-point cushion before switching to covering. This provides a moderate safety margin against opponents who score back.
+          </p>
+
+          <h4>S4 (threshold = 6&times;)</h4>
+          <p>
+            Require a 120-point lead (when 20 is the highest open target) before covering. More aggressive scoring means more time spent on offense, which delays closing but builds a substantial point buffer.
+          </p>
+
+          <h4>S5 (threshold = 9&times;)</h4>
+          <p>
+            Require a 180-point lead before covering. Very aggressive scoring. The risk is oscillation: the strategy can alternate between scoring and covering as the lead rises above and drops below the high threshold, wasting darts on mode switches rather than making steady progress.
+          </p>
+        </div>
+      </details>
+
+      <!-- S6-S9 — Extra Darts -->
+      <details class="strategy-card">
+        <summary>
+          <span>S6&ndash;S9 &mdash; Extra Darts</span>
+          <span class="strategy-tag">Extra Darts</span>
+        </summary>
+        <div class="strategy-content">
+          <p>
+            These strategies mirror S2 through S5 in their threshold behavior but add the extra-darts redirect. When you are closing a number and cannot finish it this turn (marks needed exceed darts remaining), redirect those remaining darts to scoring on your highest closed target instead.
+          </p>
+          <p>
+            The extra-darts mechanism salvages darts that would otherwise make only partial progress on a close. For example, if you need 3 marks to close 19 but only have 1 dart left in the turn, that single dart aimed at 19 gains just one mark toward closing. Redirecting it to score on an already-closed target (say, 20) earns immediate points instead.
+          </p>
+          <ul>
+            <li><strong>S6</strong> (threshold = 0, extra darts): S2 logic plus extra-darts redirect.</li>
+            <li><strong>S7</strong> (threshold = 3&times;, extra darts): S3 logic plus redirect.</li>
+            <li><strong>S8</strong> (threshold = 6&times;, extra darts): S4 logic plus redirect.</li>
+            <li><strong>S9</strong> (threshold = 9&times;, extra darts): S5 logic plus redirect.</li>
+          </ul>
+        </div>
+      </details>
+
+      <!-- S10-S13 — Chase -->
+      <details class="strategy-card">
+        <summary>
+          <span>S10&ndash;S13 &mdash; Chase</span>
+          <span class="strategy-tag">Chase</span>
+        </summary>
+        <div class="strategy-content">
+          <p>
+            These strategies mirror S2 through S5 but add chase as the highest priority action. Before evaluating the score/cover decision, the player first checks whether the opponent has closed any target that the player has not. If so, close it immediately, starting with the highest value. This blocks the opponent's ability to score on that number.
+          </p>
+          <p>
+            Chasing is a reactive, defensive maneuver. Frongello found that it is generally suboptimal because it forces the player to close targets in the opponent's preferred order rather than their own. Instead of proactively choosing which numbers to close, the chaser responds to the opponent's actions, often at the cost of tempo.
+          </p>
+          <ul>
+            <li><strong>S10</strong> (threshold = 0, chase): S2 logic with chase priority.</li>
+            <li><strong>S11</strong> (threshold = 3&times;, chase): S3 logic with chase priority.</li>
+            <li><strong>S12</strong> (threshold = 6&times;, chase): S4 logic with chase priority.</li>
+            <li><strong>S13</strong> (threshold = 9&times;, chase): S5 logic with chase priority.</li>
+          </ul>
+        </div>
+      </details>
+
+      <!-- S14-S17 — Combined -->
+      <details class="strategy-card">
+        <summary>
+          <span>S14&ndash;S17 &mdash; Combined</span>
+          <span class="strategy-tag">Combined</span>
+        </summary>
+        <div class="strategy-content">
+          <p>
+            The combined group enables both extra darts and chase. These strategies represent the full parameter space &mdash; every mechanism turned on simultaneously.
+          </p>
+          <ul>
+            <li><strong>S14</strong> (threshold = 0, extra darts, chase): S2 with both mechanisms.</li>
+            <li><strong>S15</strong> (threshold = 3&times;, extra darts, chase): S3 with both mechanisms.</li>
+            <li><strong>S16</strong> (threshold = 6&times;, extra darts, chase): S4 with both mechanisms.</li>
+            <li><strong>S17</strong> (threshold = 9&times;, extra darts, chase): S5 with both mechanisms.</li>
+          </ul>
+          <p>
+            In practice, the combination of chase and extra darts does not produce a synergistic improvement. Chase diverts darts to defensive closing, and extra darts redirects some of those same darts to scoring, partially undoing the chase priority. The combined strategies tend to perform comparably to or slightly worse than their chase-only counterparts.
+          </p>
+        </div>
+      </details>
+    </section>
+
+    <!-- ---------------------------------------------------------------- -->
+    <!--  Experimental Strategies                                           -->
+    <!-- ---------------------------------------------------------------- -->
+    <section class="section">
+      <h2 class="section-title">Experimental Strategies (E1&ndash;E4)</h2>
+      <p>
+        These four strategies extend the Frongello framework with ideas not explored in the original paper. Each one modifies S2 (the strongest Frongello strategy) with a single additional mechanic.
+      </p>
+
+      <!-- E1 — Early Bull -->
+      <details class="strategy-card">
+        <summary>
+          <span>E1 &mdash; Early Bull</span>
+          <span class="strategy-tag">Experimental</span>
+        </summary>
+        <div class="strategy-content">
+          <p>
+            S2 logic with a modified closing order. Instead of closing Bull last, close it right after 17. The full closing order becomes: 20, 19, 18, 17, Bull, 16, 15.
+          </p>
+          <p>
+            The rationale is that Bull is worth 25 points &mdash; higher than any number except 20. Under the default order, Bull is closed last, which means its scoring potential is never realized during the main game. By closing it early, the player creates a high-value scoring avenue that can be exploited if the opponent does not close Bull promptly.
+          </p>
+        </div>
+      </details>
+
+      <!-- E2 — Honeypot -->
+      <details class="strategy-card">
+        <summary>
+          <span>E2 &mdash; Honeypot</span>
+          <span class="strategy-tag">Experimental</span>
+        </summary>
+        <div class="strategy-content">
+          <p>
+            S2 logic with a covering twist. When the strategy is in cover mode and has a point lead, it skips the highest target it can currently score on. That target is left open deliberately as a future scoring trap.
+          </p>
+          <p>
+            If the opponent later catches up on points, the player already has a ready-made scoring avenue &mdash; the target it intentionally left open. This sacrifices immediate closing progress for a strategic reserve of scoring potential.
+          </p>
+        </div>
+      </details>
+
+      <!-- E3 — Greedy Close-and-Score -->
+      <details class="strategy-card">
+        <summary>
+          <span>E3 &mdash; Greedy Close-and-Score</span>
+          <span class="strategy-tag">Experimental</span>
+        </summary>
+        <div class="strategy-content">
+          <p>
+            Exploits the moment a target is closed mid-turn. When the player closes a number on dart 1 or dart 2, they immediately score on that freshly closed target with any remaining darts. The opponent has not yet had a turn to respond, so the closed target is temporarily an exclusive scoring opportunity.
+          </p>
+          <p>
+            After the turn ends, normal S2 logic resumes. The greedy element is purely opportunistic &mdash; it capitalizes on the information advantage of knowing a target was just closed before the opponent can react.
+          </p>
+        </div>
+      </details>
+
+      <!-- E4 — Adaptive Threshold -->
+      <details class="strategy-card">
+        <summary>
+          <span>E4 &mdash; Adaptive Threshold</span>
+          <span class="strategy-tag">Experimental</span>
+        </summary>
+        <div class="strategy-content">
+          <p>
+            The lead threshold scales dynamically with game progress rather than remaining fixed throughout the game.
+          </p>
+          <ul>
+            <li><strong>Early game</strong> (many targets unclosed): threshold = 3&times; the highest unblocked value. Score aggressively like S3 to build a point lead while many targets remain available.</li>
+            <li><strong>Late game</strong> (few targets remaining): threshold approaches 0. Cover quickly like S2 to close out before the opponent can respond.</li>
+          </ul>
+          <p>
+            The formula is: <code>multiplier = 3 &times; (unclosed_count / 7)</code>. With all 7 targets unclosed, the multiplier is 3.0. With only 1 target left, it drops to approximately 0.4. This creates a smooth transition from aggressive scoring to aggressive covering as the game progresses.
+          </p>
+        </div>
+      </details>
+    </section>
+
+    <!-- ---------------------------------------------------------------- -->
+    <!--  Phase Switch                                                      -->
+    <!-- ---------------------------------------------------------------- -->
+    <section class="section">
+      <h2 class="section-title">Phase Switch</h2>
+
+      <div class="callout">
+        <p class="callout-title">The Winning Strategy</p>
+        <p>
+          Phase Switch is the overall strongest strategy at the four highest skill levels (MPR 3.6, 4.0, 4.9, and 5.6), ranking #1 in the round-robin tournament. It outperforms S2 (the best Frongello strategy) head-to-head from around MPR 3.0 upward, with its advantage growing to +5.0pp at pro level. At lower skill levels, E2 (Honeypot) tops the average rankings, with S2 close behind.
+        </p>
+      </div>
+
+      <div class="card">
+        <h3 class="card-title">Two-Phase Design</h3>
+        <div class="card-body">
+          <p>Phase Switch divides the game into two distinct phases with a one-way transition between them:</p>
+
+          <h4>Phase 1 &mdash; Aggressive Scoring (Early Game)</h4>
+          <p>
+            Use a very high scoring threshold: 13 times the highest unblocked target value. This means the player keeps scoring until their lead is enormous &mdash; a 260-point cushion when 20 is the highest open target. During this phase, the strategy behaves like an extreme version of S5, building a massive point advantage before considering any covering.
+          </p>
+
+          <h4>Phase 2 &mdash; Aggressive Covering (Late Game)</h4>
+          <p>
+            When the player has 3 or fewer unclosed targets <strong>and</strong> 9 or fewer total marks remaining to close them, the strategy permanently switches to S2 behavior (threshold = 0). Cover aggressively and close out as fast as possible. Any point lead at all triggers covering.
+          </p>
+
+          <h4>The Key Insight</h4>
+          <p>
+            The one-way switch prevents the oscillation that hurts S5 and other high-threshold strategies. Once the player commits to closing, they never go back to scoring. This "locks in" the point advantage built during Phase 1. High-threshold strategies like S5 suffer from repeatedly crossing their threshold in both directions &mdash; building a lead, switching to cover, losing the lead due to opponent scoring, switching back to scoring, and so on. Phase Switch eliminates this oscillation by making the transition irreversible.
+          </p>
+        </div>
+      </div>
+
+      <p>
+        For a detailed analysis of Phase Switch's performance, grid search optimization, and win rates against every other strategy, see the <a href="phase-switch.html">Phase Switch</a> page.
+      </p>
+    </section>
+
+  </main>
+
+  <!-- ================================================================== -->
+  <!--  Footer                                                              -->
+  <!-- ================================================================== -->
+  <footer class="footer">
+    <div class="container">
+      <p>Based on Frongello (2018), "Optimal Strategy in Darts Cricket." Simulation code and data available on GitHub.</p>
+    </div>
+  </footer>
+
+  <script src="js/main.js"></script>
+</body>
+</html>

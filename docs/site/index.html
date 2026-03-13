@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Optimal Strategy in Darts Cricket</title>
+  <meta name="description" content="A computational study extending Frongello's darts cricket analysis — 18 billion simulated games across 22 strategies, 11 skill levels, and 4 bull accuracy conditions.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    .findings-list {
+      list-style: none;
+      padding: 0;
+      margin: var(--space-lg) 0;
+    }
+    .findings-list li {
+      padding: var(--space-md) 0;
+      border-bottom: 1px solid var(--color-card-border);
+    }
+    .findings-list li:last-child {
+      border-bottom: none;
+    }
+    .finding-number {
+      display: inline-block;
+      font-family: var(--font-heading);
+      font-weight: 800;
+      color: var(--color-accent);
+      font-size: 0.85rem;
+      margin-right: var(--space-sm);
+    }
+    .stat-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-md);
+      margin: var(--space-xl) 0;
+    }
+    .stat-item {
+      flex: 1 1 140px;
+      background: var(--color-card-bg);
+      border: 1px solid var(--color-card-border);
+      border-radius: var(--border-radius);
+      padding: var(--space-md) var(--space-lg);
+      text-align: center;
+    }
+    .stat-item .stat-number {
+      display: block;
+      font-family: var(--font-heading);
+      font-weight: 800;
+      font-size: 1.5rem;
+      color: var(--color-accent);
+      line-height: 1.2;
+    }
+    .stat-item .stat-label {
+      display: block;
+      font-family: var(--font-heading);
+      font-size: 0.75rem;
+      color: var(--color-text);
+      opacity: 0.7;
+      margin-top: var(--space-xs);
+    }
+    .regime-table td, .regime-table th {
+      padding: var(--space-sm) var(--space-md);
+    }
+    .explore-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: var(--space-lg);
+      margin-top: var(--space-lg);
+    }
+    .explore-grid .card {
+      text-decoration: none;
+      color: inherit;
+      transition: border-color 0.15s ease;
+    }
+    .explore-grid .card:hover {
+      border-color: var(--color-accent);
+    }
+    .card-tag {
+      display: inline-block;
+      font-family: var(--font-heading);
+      font-size: 0.65rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      background: var(--color-accent);
+      color: #fff;
+      padding: 1px 6px;
+      border-radius: var(--border-radius-pill);
+      margin-bottom: var(--space-sm);
+    }
+    .card-tag.tag-tool {
+      background: var(--color-green);
+    }
+    .card-tag.tag-data {
+      background: #6366f1;
+    }
+    .card-tag.tag-ai {
+      background: #ec4899;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navigation -->
+  <nav class="nav">
+    <div class="nav-inner">
+      <a href="index.html" class="nav-brand">Darts Cricket Research</a>
+      <button class="hamburger-btn nav-toggle" aria-label="Toggle navigation">
+        <span></span><span></span><span></span>
+      </button>
+      <div class="nav-links">
+        <a href="index.html" class="active">Home</a>
+        <a href="strategies.html">Strategies</a>
+        <a href="results.html">Results</a>
+        <a href="phase-switch.html">Phase Switch</a>
+        <a href="bull-analysis.html">Bull Analysis</a>
+        <a href="ai-agent.html">AI Agent</a>
+        <a href="methodology.html">Methodology</a>
+        <a href="advisor.html">Advisor</a>
+        <a href="bull-advisor.html">Bull Advisor</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <header class="hero">
+    <div class="container">
+      <h1 class="hero-title">Optimal Strategy in Darts Cricket</h1>
+      <p class="hero-subtitle">A computational study of 22 strategies across skill levels, bull accuracy, and opponent matchups</p>
+      <p class="hero-author">Extending Frongello (2018) &mdash; 2026</p>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="container">
+
+    <!-- The Study -->
+    <section class="section" id="the-study">
+      <h2 class="section-title">The Study</h2>
+      <p>
+        Cricket is one of the most popular darts games played in bars, leagues, and tournaments worldwide.
+        Two players take turns throwing three darts at seven targets (15&ndash;20 and Bull). Close all seven
+        and outscore your opponent to win. The strategic tension &mdash; when to score points vs. when to
+        close numbers &mdash; is the central question of the game.
+      </p>
+      <p>
+        In 2018, Andrew Frongello published the first systematic analysis, defining 17 strategies and testing
+        them in simulation. We extended that work with realistic skill profiles, new experimental strategies,
+        and a dimension Frongello didn't model: <strong>bull accuracy</strong>. The result is the most
+        comprehensive computational study of darts cricket strategy to date.
+      </p>
+
+      <div class="stat-row">
+        <div class="stat-item">
+          <span class="stat-number">18B+</span>
+          <span class="stat-label">Simulated Games</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-number">22</span>
+          <span class="stat-label">Strategies Tested</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-number">11</span>
+          <span class="stat-label">Skill Levels</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-number">16</span>
+          <span class="stat-label">Bull Conditions</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-number">1,936</span>
+          <span class="stat-label">Tournaments</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Key Findings -->
+    <section class="section" id="findings">
+      <h2 class="section-title">Key Findings</h2>
+
+      <ol class="findings-list">
+        <li>
+          <span class="finding-number">01</span>
+          <strong>The right strategy depends on your skill level.</strong>
+          There is no single best strategy. At low MPR (beginners), strategy differences are small and luck
+          dominates. At mid MPR (league players), E2 (Honeypot) and S2 (Score Then Cover) compete closely. At high MPR (pros),
+          Phase Switch pulls ahead. The optimal approach shifts across the full skill spectrum.
+        </li>
+        <li>
+          <span class="finding-number">02</span>
+          <strong>Bull accuracy is a hidden dimension that changes everything.</strong>
+          When we modeled bull as harder to hit than numbers (which it is on a real board), the entire
+          strategy landscape shifted. E1 (Early Bull) &mdash; previously the #1 strategy at 9 of 11
+          skill levels &mdash; collapsed to dead last at MPR 4.0+. A single parameter change reshuffled
+          the competitive field more than any other factor in the study.
+        </li>
+        <li>
+          <span class="finding-number">03</span>
+          <strong>Your optimal strategy depends on your opponent's stats too.</strong>
+          Asymmetric bull accuracy between players creates win rate spreads of 16&ndash;39 percentage points
+          (depending on skill level) and changes which strategy is optimal. Strategy recommendations change in ~77% of asymmetric
+          slots. A player who is great at bull should play fundamentally differently than one who isn't
+          &mdash; and differently again depending on their opponent's bull accuracy.
+        </li>
+        <li>
+          <span class="finding-number">04</span>
+          <strong>Frongello's core principles hold across all conditions.</strong>
+          Score first, then cover. Never chase. Weaker players want shorter games. These findings replicate
+          across 11 skill levels and 16 bull conditions. An RL agent independently rediscovered these principles
+          through pure trial and error, providing strong confirmation they reflect genuine strategic truth.
+        </li>
+        <li>
+          <span class="finding-number">05</span>
+          <strong>A new strategy beats everything at high skill.</strong>
+          Phase Switch &mdash; score aggressively early, then irreversibly commit to closing &mdash;
+          ranks #1 from MPR 3.6 upward and beats S2 (Score Then Cover) head-to-head from ~3.0. The key innovation is eliminating
+          oscillation: once you decide to close out, you never go back. Its advantage grows with skill,
+          reaching +5.0pp vs S2 at pro level.
+        </li>
+        <li>
+          <span class="finding-number">06</span>
+          <strong>An RL agent discovered something no human designed.</strong>
+          A branching actor-critic agent, trained from scratch against 13 hard bots, learned to adapt
+          its opening based on turn order: 20 when going first, 18 when going second. None of the 28
+          hand-crafted strategies make this distinction. The agent also independently confirmed Frongello's
+          "never chase" and "score before cover" principles.
+        </li>
+      </ol>
+    </section>
+
+    <!-- Strategy Regimes -->
+    <section class="section" id="regimes">
+      <h2 class="section-title">What Should You Play?</h2>
+      <p>
+        The answer depends on three things: your skill, your bull accuracy, and your opponent. Here's
+        the simplified regime map from 1,936 tournaments:
+      </p>
+
+      <div class="matrix-wrapper">
+        <table class="methodology-table regime-table">
+          <thead>
+            <tr>
+              <th>Your Profile</th>
+              <th>Best Strategy</th>
+              <th>Why</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Low MPR (beginner)</td>
+              <td class="text-accent"><strong>S2</strong> (Score Then Cover) or <strong>E2</strong> (Honeypot)</td>
+              <td>Misses dominate; simple score-then-cover maximizes what you can control</td>
+            </tr>
+            <tr>
+              <td>Mid MPR (league)</td>
+              <td class="text-accent"><strong>E2</strong> (Honeypot), <strong>S2</strong>, or <strong>PS</strong> (Phase Switch)</td>
+              <td>The competitive field is tight; E2's honeypot and S2's universality trade the #1 spot</td>
+            </tr>
+            <tr>
+              <td>High MPR (pro)</td>
+              <td class="text-accent"><strong>PS</strong> (Phase Switch)</td>
+              <td>Aggressive early scoring + irreversible switch exploits accuracy advantage</td>
+            </tr>
+            <tr>
+              <td>Bad at bull (0.25&ndash;0.50x)</td>
+              <td class="text-accent"><strong>S9</strong> (Max Threshold) or <strong>E2</strong> (Honeypot)</td>
+              <td>High threshold (S9) defers bull longest; E2's honeypot avoids bull-dependent decisions</td>
+            </tr>
+            <tr>
+              <td>Good at bull (1.00x)</td>
+              <td class="text-accent"><strong>E1</strong> (Early Bull)</td>
+              <td>Early bull closure becomes an offensive weapon when you can hit it</td>
+            </tr>
+            <tr>
+              <td>Outmatched on skill</td>
+              <td class="text-accent"><strong>S2</strong> (Score Then Cover) or <strong>S1</strong> (Pure Close)</td>
+              <td>S2 wins head-to-head against any standard opponent. S1 is the safer maximin choice if you don't know your opponent's strategy &mdash; it has the best worst-case and highest tournament average for the weaker player</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p class="text-small text-muted">
+        For personalized recommendations based on your exact matchup, use the
+        <a href="bull-advisor.html">Bull Advisor</a> or <a href="advisor.html">Strategy Advisor</a>.
+      </p>
+    </section>
+
+    <!-- Explore the Results -->
+    <section class="section" id="explore">
+      <h2 class="section-title">Explore</h2>
+
+      <div class="explore-grid">
+
+        <a href="bull-advisor.html" class="card">
+          <span class="card-tag tag-tool">Interactive</span>
+          <h3 class="card-title">Bull Advisor</h3>
+          <p class="card-body">
+            Enter your MPR and bull accuracy to get a personalized strategy recommendation.
+            Covers all 1,936 tournament conditions with head-to-head best-response analysis.
+          </p>
+        </a>
+
+        <a href="advisor.html" class="card">
+          <span class="card-tag tag-tool">Interactive</span>
+          <h3 class="card-title">Game State Advisor</h3>
+          <p class="card-body">
+            Enter a mid-game board state and see what all 22 strategies recommend for
+            your next throw. Real-time consensus analysis with win probabilities.
+          </p>
+        </a>
+
+        <a href="bull-analysis.html" class="card">
+          <span class="card-tag tag-data">Research</span>
+          <h3 class="card-title">Bull Difficulty Analysis</h3>
+          <p class="card-body">
+            The E1 collapse, ranking stability across bull conditions, game length impact,
+            and the equalizing effect of harder bull in unequal matchups.
+          </p>
+        </a>
+
+        <a href="results.html" class="card">
+          <span class="card-tag tag-data">Data</span>
+          <h3 class="card-title">Tournament Results</h3>
+          <p class="card-body">
+            Full 22&times;22 win-rate matrices at 11 skill levels. Interactive tables with
+            rankings and head-to-head comparisons.
+          </p>
+        </a>
+
+        <a href="strategies.html" class="card">
+          <span class="card-tag">Reference</span>
+          <h3 class="card-title">22 Strategies</h3>
+          <p class="card-body">
+            17 Frongello strategies, 4 experimental approaches, and Phase Switch.
+            Each defined by its parameters and decision logic.
+          </p>
+        </a>
+
+        <a href="phase-switch.html" class="card">
+          <span class="card-tag tag-data">Research</span>
+          <h3 class="card-title">Phase Switch</h3>
+          <p class="card-body">
+            How a two-phase strategy was discovered through grid search and why
+            irreversible commitment outperforms threshold oscillation at high skill.
+          </p>
+        </a>
+
+        <a href="ai-agent.html" class="card">
+          <span class="card-tag tag-ai">AI</span>
+          <h3 class="card-title">The AI Agent</h3>
+          <p class="card-body">
+            An RL agent trained from scratch discovered turn-order-dependent play
+            and independently confirmed Frongello's principles. 19 versions, 12 bugs, 3 breakthroughs.
+          </p>
+        </a>
+
+        <a href="methodology.html" class="card">
+          <span class="card-tag">Reference</span>
+          <h3 class="card-title">Methodology</h3>
+          <p class="card-body">
+            Skill profiles, miss models, simulation parameters, and statistical
+            methodology behind every number on this site.
+          </p>
+        </a>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <p>Based on Frongello (2018), "Optimal Strategy in Darts Cricket." Simulation code and data available on GitHub.</p>
+    </div>
+  </footer>
+
+  <script src="js/main.js"></script>
+</body>
+</html>

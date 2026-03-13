@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tournament Results &mdash; Darts Cricket Research</title>
+  <meta name="description" content="22x22 round-robin tournament results across 11 skill levels for darts cricket strategies.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    /* Data loading/error state */
+    .muted {
+      font-family: var(--font-heading);
+      font-size: 0.9rem;
+      color: var(--color-text);
+      opacity: 0.5;
+      text-align: center;
+      padding: var(--space-2xl) var(--space-lg);
+    }
+
+    .data-error {
+      font-family: var(--font-heading);
+      font-size: 0.9rem;
+      color: var(--color-red);
+      text-align: center;
+      padding: var(--space-2xl) var(--space-lg);
+    }
+
+    /* Rank bar in rankings table */
+    .rank-bar-cell {
+      width: 40%;
+      padding-right: var(--space-lg);
+    }
+
+    .rank-bar {
+      height: 10px;
+      border-radius: var(--border-radius-pill);
+      transition: width 0.4s ease;
+    }
+
+    /* Matrix hover highlighting */
+    .matrix-hover-row {
+      opacity: 0.85;
+    }
+
+    .matrix-hover-col {
+      opacity: 0.85;
+    }
+
+    @media (max-width: 768px) {
+      .stat-box {
+        flex: 1 1 calc(50% - var(--space-md));
+      }
+
+      .stat-value {
+        font-size: 1.25rem;
+      }
+
+      .rank-bar-cell {
+        display: none;
+      }
+
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navigation -->
+  <nav class="nav">
+    <div class="nav-inner">
+      <a href="index.html" class="nav-brand">Darts Cricket Research</a>
+      <button class="hamburger-btn nav-toggle" aria-label="Toggle navigation">
+        <span></span><span></span><span></span>
+      </button>
+      <div class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="strategies.html">Strategies</a>
+        <a href="results.html" class="active">Results</a>
+        <a href="phase-switch.html">Phase Switch</a>
+        <a href="bull-analysis.html">Bull Analysis</a>
+        <a href="ai-agent.html">AI Agent</a>
+        <a href="methodology.html">Methodology</a>
+        <a href="advisor.html">Advisor</a>
+        <a href="bull-advisor.html">Bull Advisor</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Header -->
+  <header class="hero">
+    <div class="container">
+      <h1 class="hero-title">Tournament Results</h1>
+      <p class="hero-subtitle">22&times;22 round-robin across 11 skill levels</p>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="container">
+
+    <!-- MPR Level Toggle -->
+    <section class="section" id="mpr-toggle">
+      <h2 class="section-title">Skill Level</h2>
+      <p>
+        Select a skill level to view the tournament results at that MPR (Marks Per Round).
+        Higher MPR corresponds to more skilled players who hit triples more consistently.
+      </p>
+      <div class="toggle-group mpr-toggle" id="mpr-toggle-group">
+        <!-- Labels are populated dynamically from tournament JSON data -->
+        <button class="toggle-btn active" data-mpr="5.6">5.6</button>
+        <button class="toggle-btn" data-mpr="4.9">4.9</button>
+        <button class="toggle-btn" data-mpr="4.0">4.0</button>
+        <button class="toggle-btn" data-mpr="3.6">3.6</button>
+        <button class="toggle-btn" data-mpr="3.0">3.0</button>
+        <button class="toggle-btn" data-mpr="2.5">2.5</button>
+        <button class="toggle-btn" data-mpr="2.0">2.0</button>
+        <button class="toggle-btn" data-mpr="1.5">1.5</button>
+        <button class="toggle-btn" data-mpr="1.2">1.2</button>
+        <button class="toggle-btn" data-mpr="1.0">1.0</button>
+        <button class="toggle-btn" data-mpr="0.8">0.8</button>
+      </div>
+    </section>
+
+    <!-- Tournament Matrix -->
+    <section class="section" id="tournament-matrix-section">
+      <h2 class="section-title">Tournament Matrix</h2>
+      <p>
+        Each cell shows the row strategy's win rate (%) against the column strategy. Values above
+        50% (green) indicate the row strategy wins more often. The matrix is symmetric: if A beats
+        B at 55%, then B beats A at 45%.
+      </p>
+      <div class="matrix-full-bleed">
+        <div id="tournament-matrix">
+          <p class="muted">Loading tournament data...</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- How to Read the Matrix -->
+    <section class="section" id="reading-the-matrix">
+      <h2 class="section-title">How to Read the Matrix</h2>
+      <ul>
+        <li><strong>Green cells (&gt;55%)</strong> &mdash; The row strategy dominates this matchup, winning more than 55% of games.</li>
+        <li><strong>Yellow cells (~50%)</strong> &mdash; An even matchup where neither strategy has a meaningful advantage.</li>
+        <li><strong>Red cells (&lt;45%)</strong> &mdash; The column strategy dominates, and the row strategy loses more than 55% of games.</li>
+        <li><strong>Diagonal cells</strong> &mdash; Always 50% since a strategy playing itself wins half the time by definition.</li>
+        <li><strong>Hover</strong> &mdash; Move your cursor over any cell to highlight the full row and column for easier cross-referencing.</li>
+      </ul>
+    </section>
+
+    <!-- Rankings -->
+    <section class="section" id="rankings-section">
+      <h2 class="section-title">Rankings</h2>
+      <div id="rankings-table">
+        <p class="muted">Loading rankings...</p>
+      </div>
+      <p class="text-small text-muted">
+        Strategies ranked by average win rate across all opponents. The average excludes self-play
+        (the diagonal), so it reflects head-to-head performance against every other strategy in the
+        tournament. Note: average win rate is heavily influenced by margins against weak strategies.
+        Two strategies that tie head-to-head can have different rankings if one beats weak opponents
+        by wider margins. See Key Observations below for details.
+      </p>
+    </section>
+
+    <!-- Key Observations -->
+    <section class="section" id="key-observations">
+      <h2 class="section-title">Key Observations</h2>
+      <ul>
+        <li>
+          <strong>Phase Switch (PS) is the strongest strategy head-to-head at high skill.</strong>
+          PS ranks #1 at the four highest skill levels (MPR 3.6, 4.0, 4.9, and 5.6) and beats every other
+          top strategy (S2 Score Then Cover, E1 Early Bull, E2 Honeypot) head-to-head from MPR ~3.0 upward. Its advantage over S2
+          grows to +5.0pp at pro level.
+        </li>
+        <li>
+          <strong>S2 (Score Then Cover) remains the best of the original 17 Frongello strategies at nearly every
+          skill level.</strong> Its simple rule ("score until you have any lead, then cover") holds up
+          under realistic miss rates. Only at the very lowest skill level does S10 (Chase) edge it out slightly.
+        </li>
+        <li>
+          <strong>Chase strategies (S10&ndash;S13, S14&ndash;S17) generally underperform their
+          non-chase counterparts.</strong> Frongello's original finding that chasing is suboptimal
+          holds across skill levels, with the gap widening as skill increases.
+        </li>
+        <li>
+          <strong>Extra darts (S6&ndash;S9) do not improve on basic (S2&ndash;S5).</strong>
+          Despite the intuition that redirecting leftover darts to scoring should help, S6 consistently
+          underperforms S2 at every skill level. The extra-darts redirect appears to disrupt the
+          closing tempo more than the additional scoring compensates for.
+        </li>
+        <li>
+          <strong>Average rankings can be misleading.</strong>
+          Tournament averages are heavily influenced by margins against weak strategies. A strategy
+          that crushes bottom-tier opponents (S5, S9, S13, S17) by wider margins will rank higher
+          on average even if it ties or loses head-to-head against top strategies. Under standard
+          bull (pre-bull data), E1 ranked #1 at 9 of 11 skill levels by average, but tied S2
+          head-to-head. Under realistic bull (shown in the matrix above), E1 collapses. Among the
+          top strategies (S2, E2, PS), only PS clearly separates itself &mdash; and only at higher
+          skill levels.
+        </li>
+        <li>
+          <strong>At low MPR levels (high miss rates), strategy differences diminish.</strong> When
+          most darts miss their target, luck dominates and the gap between the best and worst strategies
+          narrows considerably.
+        </li>
+        <li>
+          <strong>At high MPR levels, strategy matters more.</strong> The gap between S1 (Pure Close &mdash; close only,
+          never score) and PS (Phase Switch) widens as skill increases, because skilled players can actually execute
+          the strategic intent of their approach.
+        </li>
+      </ul>
+    </section>
+
+    <!-- Frongello's Original Rankings -->
+    <section class="section" id="frongello-rankings">
+      <h2 class="section-title">Frongello's Original Rankings</h2>
+      <p>
+        For comparison, Frongello's equal-skill simulation found the following ranking by average
+        win rate:
+      </p>
+      <blockquote>
+        S2 &gt; S6 &gt; S10 &gt; S14 &gt; S3 &gt; S7 &gt; S11 &gt; S15 &gt; S1 &gt; S4 &gt; S8 &gt; S12 &gt; S16 &gt; S5 &gt; S9 &gt; S13 &gt; S17
+      </blockquote>
+      <p>
+        Frongello found S2 statistically significantly better than S6 against 13 of 17 strategies
+        at equal skill (S2 beat S6 head-to-head 51.9%). However, in his unequal-skill simulation
+        (one player at 95% relative accuracy), S6 became optimal &mdash; using &ldquo;extra
+        darts&rdquo; extends the game and favors the stronger player. Under our realistic miss-rate
+        profiles at equal skill, the gap between S2 and S6 widens further, confirming that extra
+        darts disrupt closing tempo when accuracy is imperfect.
+      </p>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <p>Based on Frongello (2018), "Optimal Strategy in Darts Cricket." Simulation code and data available on GitHub.</p>
+    </div>
+  </footer>
+
+  <script src="js/main.js"></script>
+</body>
+</html>

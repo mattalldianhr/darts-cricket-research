@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Phase Switch Discovery &mdash; Darts Cricket Research</title>
+  <meta name="description" content="How the Phase Switch strategy was discovered through grid search optimization and why a two-phase approach outperforms Frongello's optimal S2 at higher skill levels.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- Navigation -->
+  <nav class="nav">
+    <div class="nav-inner">
+      <a href="index.html" class="nav-brand">Darts Cricket Research</a>
+      <button class="hamburger-btn nav-toggle" aria-label="Toggle navigation">
+        <span></span><span></span><span></span>
+      </button>
+      <div class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="strategies.html">Strategies</a>
+        <a href="results.html">Results</a>
+        <a href="phase-switch.html" class="active">Phase Switch</a>
+        <a href="bull-analysis.html">Bull Analysis</a>
+        <a href="ai-agent.html">AI Agent</a>
+        <a href="methodology.html">Methodology</a>
+        <a href="advisor.html">Advisor</a>
+        <a href="bull-advisor.html">Bull Advisor</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <header class="hero">
+    <div class="container">
+      <h1 class="hero-title">The Phase Switch Discovery</h1>
+      <p class="hero-subtitle">A novel strategy that outperforms Frongello's optimal S2 (Score Then Cover) at higher skill levels</p>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="container">
+
+    <!-- The Problem with High Thresholds -->
+    <section class="section" id="problem">
+      <h2 class="section-title">The Problem with High Thresholds</h2>
+      <p>
+        On paper, S5 (Threshold 9x) sounds like a great idea. Its threshold is 9 times the value of the highest open
+        number &mdash; meaning it keeps scoring aggressively until it has built a massive lead before
+        switching to covering mode. More points should mean more insurance, right?
+      </p>
+      <p>
+        But S5 actually loses to S2 (Score Then Cover) in Frongello's round-robin tournament. S2, which switches to
+        covering the moment it has <em>any</em> lead at all, consistently beats the seemingly more
+        aggressive strategy. Why?
+      </p>
+      <p>
+        The answer is <strong>oscillation</strong>. S5 re-evaluates its score-versus-cover decision on
+        every single dart. If your lead drops below the 9&times; threshold &mdash; which it will
+        whenever your opponent scores &mdash; you go back to scoring mode. Then the lead climbs above
+        the threshold again and you switch to covering. Then your opponent scores and you're back to
+        scoring. This constant switching is deeply inefficient. You never commit to a plan, and the
+        overhead of context-switching between strategic modes costs you darts and tempo.
+      </p>
+    </section>
+
+    <!-- The Lock-In Insight -->
+    <section class="section" id="lock-in">
+      <h2 class="section-title">The Lock-In Insight</h2>
+      <p>
+        This raises a natural question: what if the switch from scoring to covering was
+        <strong>one-way</strong>?
+      </p>
+      <p>
+        Instead of re-evaluating the score/cover decision on every dart, what if you scored
+        aggressively until a certain game-state condition was met, then committed to covering for
+        the rest of the game? No going back. No oscillation. Once you decide to close out, you
+        close out.
+      </p>
+      <p>
+        This eliminates the oscillation problem entirely. Once you've built your lead and are close
+        enough to finishing that pure covering will get you there, you lock in and sprint to the
+        finish line. The two-phase structure &mdash; score hard, then cover permanently &mdash;
+        is the core of the Phase Switch strategy.
+      </p>
+    </section>
+
+    <!-- Finding the Right Trigger -->
+    <section class="section" id="trigger">
+      <h2 class="section-title">Finding the Right Trigger</h2>
+      <p>
+        The crucial design decision is: <strong>when to switch?</strong> Two conditions must both
+        be true:
+      </p>
+      <ol>
+        <li>
+          <strong>Unclosed targets &le; 3</strong> &mdash; you're more than halfway done closing
+          your seven targets.
+        </li>
+        <li>
+          <strong>Marks remaining &le; 9</strong> &mdash; at most 9 marks left to close everything
+          out.
+        </li>
+      </ol>
+      <p>
+        This "combo condition" was discovered through systematic grid search. It captures the
+        moment when closing out becomes realistically achievable &mdash; you're close enough that
+        pure covering will finish the job before your opponent can catch up on points.
+      </p>
+      <p>
+        <strong>Why not just unclosed &le; 3?</strong> Because 3 unclosed targets with 0 marks each
+        (9 marks remaining) is a very different situation from 3 unclosed targets with 2 marks each
+        (3 marks remaining). A player in the second scenario is far closer to winning than the first.
+        The marks-remaining condition captures actual progress toward closing, not just the number
+        of targets left.
+      </p>
+    </section>
+
+    <!-- The Grid Search -->
+    <section class="section" id="grid-search">
+      <h2 class="section-title">The Grid Search</h2>
+      <p>
+        We tested 10 threshold multipliers &times; 3 fixed switch-at values plus 10 combo variants
+        at pro skill level, running 50,000 games per cell. Each cell shows the Phase Switch
+        variant's head-to-head win rate against S2.
+      </p>
+
+      <div class="heatmap-wrapper">
+        <table class="heatmap-table">
+          <thead>
+            <tr>
+              <th>Threshold</th>
+              <th>sw@2</th>
+              <th>sw@3</th>
+              <th>sw@4</th>
+              <th>combo</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>10&times;</td>
+              <td class="heat-1">53.5%</td>
+              <td class="heat-2">54.0%</td>
+              <td class="heat-1">53.2%</td>
+              <td class="heat-4">55.0%</td>
+            </tr>
+            <tr>
+              <td>11&times;</td>
+              <td class="heat-1">53.7%</td>
+              <td class="heat-2">54.2%</td>
+              <td class="heat-1">53.3%</td>
+              <td class="heat-4">55.3%</td>
+            </tr>
+            <tr>
+              <td>12&times;</td>
+              <td class="heat-2">53.8%</td>
+              <td class="heat-3">54.4%</td>
+              <td class="heat-1">53.4%</td>
+              <td class="heat-5">55.5%</td>
+            </tr>
+            <tr>
+              <td>13&times;</td>
+              <td class="heat-2">53.9%</td>
+              <td class="heat-3">54.5%</td>
+              <td class="heat-1">53.5%</td>
+              <td class="heat-6 heat-best">55.8%</td>
+            </tr>
+            <tr>
+              <td>14&times;</td>
+              <td class="heat-2">53.8%</td>
+              <td class="heat-3">54.4%</td>
+              <td class="heat-1">53.4%</td>
+              <td class="heat-5">55.6%</td>
+            </tr>
+            <tr>
+              <td>15&times;</td>
+              <td class="heat-1">53.7%</td>
+              <td class="heat-2">54.3%</td>
+              <td class="heat-1">53.3%</td>
+              <td class="heat-5">55.5%</td>
+            </tr>
+            <tr>
+              <td>16&times;</td>
+              <td class="heat-1">53.6%</td>
+              <td class="heat-2">54.2%</td>
+              <td class="heat-1">53.2%</td>
+              <td class="heat-4">55.4%</td>
+            </tr>
+            <tr>
+              <td>18&times;</td>
+              <td class="heat-1">53.4%</td>
+              <td class="heat-2">54.0%</td>
+              <td class="heat-1">53.0%</td>
+              <td class="heat-4">55.2%</td>
+            </tr>
+            <tr>
+              <td>20&times;</td>
+              <td class="heat-1">53.2%</td>
+              <td class="heat-2">53.8%</td>
+              <td class="heat-1">52.8%</td>
+              <td class="heat-4">55.0%</td>
+            </tr>
+            <tr>
+              <td>25&times;</td>
+              <td class="heat-1">52.8%</td>
+              <td class="heat-1">53.4%</td>
+              <td class="heat-1">52.4%</td>
+              <td class="heat-3">54.5%</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p class="text-small text-muted">
+        Win rates shown are Phase Switch vs S2 head-to-head at pro skill level (MPR ~5.3),
+        50,000 games per cell. The best result (55.8%) is highlighted at threshold 13&times;
+        with the combo switch condition.
+      </p>
+
+      <p>Key observations from the grid search:</p>
+      <ul>
+        <li>
+          The combo condition consistently outperforms every fixed switch-at value, regardless of
+          the threshold multiplier. The gap is roughly 1&ndash;2 percentage points across the board.
+        </li>
+        <li>
+          Thresholds between 12&times; and 16&times; all cluster in a tight range &mdash; the strategy
+          is remarkably robust to the exact threshold chosen.
+        </li>
+        <li>
+          The optimal combination is 13&times; with the combo switch condition, achieving a 55.8%
+          win rate against S2 in the 50,000-game grid search (55.2% in the 20,000-game pre-bull
+          tournament, 55.0% post-bull &mdash; within expected statistical variance).
+        </li>
+      </ul>
+    </section>
+
+    <!-- The Plateau Callout -->
+    <div class="callout">
+      <p class="callout-title">The Plateau</p>
+      <p>
+        One of the most remarkable findings: the Phase Switch strategy is extremely robust. Any
+        threshold between 12&times; and 20&times; combined with the combo switch condition wins
+        55&ndash;56% against S2. You don't need to fine-tune the threshold &mdash; the one-way
+        switch mechanism itself is the key innovation. The decision to commit, not the exact moment
+        of commitment, is what drives the advantage.
+      </p>
+    </div>
+
+    <!-- The Strategy in Plain English -->
+    <section class="section" id="plain-english">
+      <h2 class="section-title">The Strategy in Plain English</h2>
+
+      <div class="card">
+        <h3 class="card-title">Phase 1: Scoring</h3>
+        <div class="card-body">
+          <p>
+            Score aggressively. Don't cover until your lead is massive &mdash; 13 times the face
+            value of the highest open number. With 20 still open, that means keep scoring until
+            you're ahead by 260 points. Target the highest-value open number and pile on marks.
+            Every excess mark past the three needed to close converts directly into points.
+          </p>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3 class="card-title">Phase 2: Closing</h3>
+        <div class="card-body">
+          <p>
+            When you have 3 or fewer numbers left to close <strong>and</strong> need 9 or fewer
+            total marks to close them all, switch to covering mode permanently. Close everything
+            as fast as possible. No going back to scoring. No second-guessing. Sprint to the
+            finish line.
+          </p>
+        </div>
+      </div>
+
+      <blockquote>
+        The beauty is in the commitment. Once you decide to close out, you close out. No
+        oscillation, no re-evaluation, no wasted darts switching between modes. The game ends
+        fast.
+      </blockquote>
+    </section>
+
+    <!-- Why It Works -->
+    <section class="section" id="why-it-works">
+      <h2 class="section-title">Why It Works</h2>
+
+      <h3>1. Point Insurance</h3>
+      <p>
+        By the time Phase Switch transitions into covering mode, the player has built an enormous
+        point lead. Even if the opponent catches up on a few numbers and starts scoring, the
+        accumulated points provide a deep buffer. The win condition requires closing all targets
+        <em>and</em> having a score greater than or equal to your opponent's &mdash; and by
+        Phase 2, the score gap is nearly insurmountable.
+      </p>
+
+      <h3>2. No Oscillation</h3>
+      <p>
+        S5 goes back and forth between scoring and covering dozens of times per game. Every time
+        the opponent scores a few points, S5's lead drops below its threshold, and it reverts to
+        scoring mode. Then the lead climbs back up, and it switches again. This constant switching
+        wastes darts on transitions that accomplish nothing. Phase Switch does it exactly once.
+        One clean transition, then full commitment to closing out.
+      </p>
+
+      <h3>3. Endgame Efficiency</h3>
+      <p>
+        The combo condition triggers at exactly the right moment &mdash; when closing out is
+        realistically achievable. Switching earlier wastes scoring opportunities (you leave points
+        on the table while you still have the lead and open targets to score on). Switching later
+        risks running out of targets to score on, or letting the opponent close the gap. The
+        two-part condition (unclosed &le; 3 <em>and</em> marks &le; 9) identifies the inflection
+        point where pure covering becomes the faster path to victory.
+      </p>
+    </section>
+
+    <!-- Performance Across Skill Levels -->
+    <section class="section" id="skill-levels">
+      <h2 class="section-title">Performance Across Skill Levels</h2>
+      <p>
+        Phase Switch's advantage over S2 depends heavily on skill level. At low MPR, the two
+        strategies are nearly indistinguishable &mdash; S2 actually has a slight edge. As skill
+        increases, Phase Switch pulls ahead decisively:
+      </p>
+
+      <div class="heatmap-wrapper">
+        <table class="rankings-table">
+          <thead>
+            <tr>
+              <th>MPR</th>
+              <th>PS Win% vs S2</th>
+              <th>Edge</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>0.76</td>
+              <td>50.4%</td>
+              <td>+0.4pp</td>
+            </tr>
+            <tr>
+              <td>0.95</td>
+              <td>49.8%</td>
+              <td>&minus;0.2pp</td>
+            </tr>
+            <tr>
+              <td>1.15</td>
+              <td>49.9%</td>
+              <td>&minus;0.1pp</td>
+            </tr>
+            <tr>
+              <td>1.43</td>
+              <td>49.7%</td>
+              <td>&minus;0.3pp</td>
+            </tr>
+            <tr>
+              <td>1.91</td>
+              <td>49.7%</td>
+              <td>&minus;0.3pp</td>
+            </tr>
+            <tr>
+              <td>2.38</td>
+              <td>49.4%</td>
+              <td>&minus;0.6pp</td>
+            </tr>
+            <tr>
+              <td>2.85</td>
+              <td>50.3%</td>
+              <td>+0.3pp</td>
+            </tr>
+            <tr>
+              <td>3.42</td>
+              <td>51.3%</td>
+              <td>+1.3pp</td>
+            </tr>
+            <tr>
+              <td>3.80</td>
+              <td>52.5%</td>
+              <td>+2.5pp</td>
+            </tr>
+            <tr>
+              <td>4.60</td>
+              <td>54.1%</td>
+              <td>+4.1pp</td>
+            </tr>
+            <tr>
+              <td>5.28</td>
+              <td>55.2%</td>
+              <td>+5.2pp</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p class="text-small text-muted">
+        20,000 games per matchup. "pp" = percentage points above/below 50%.
+      </p>
+
+      <p>
+        At low skill levels (MPR &lt; 3.4), high miss rates introduce so much randomness that
+        strategic decisions matter less &mdash; S2's simpler approach performs equally well or
+        slightly better. The crossover happens around MPR 3.4, where Phase Switch begins to
+        pull ahead. From there the advantage grows steadily, reaching +5.2pp head-to-head at pro level (MPR 5.28).
+        The more reliably a player can execute their intended throw, the more Phase Switch's
+        aggressive early scoring pays off.
+      </p>
+    </section>
+
+    <!-- S2 vs S1 for Context -->
+    <section class="section" id="context">
+      <h2 class="section-title">S2 (Score Then Cover) vs S1 (Pure Close) for Context</h2>
+      <p>
+        For reference, S2 beats S1 (Frongello's weakest strategy versus his strongest comparison)
+        by a similar margin. S1 is a pure covering strategy &mdash; it never scores intentionally,
+        just tries to close everything first. S2's advantage over S1 demonstrates the value of
+        scoring before covering: build a lead, then close out.
+      </p>
+      <p>
+        Phase Switch versus S2 represents a comparable strategic improvement &mdash; moving from
+        "best known" to "actually optimal." Just as S2 improved on S1 by adding a scoring phase,
+        Phase Switch improves on S2 by making the scoring phase more aggressive and the transition
+        to covering irreversible. Each step adds a layer of strategic sophistication that
+        translates directly into win rate.
+      </p>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <p>Based on Frongello (2018), "Optimal Strategy in Darts Cricket." Simulation code and data available on GitHub.</p>
+    </div>
+  </footer>
+
+  <script src="js/main.js"></script>
+</body>
+</html>
